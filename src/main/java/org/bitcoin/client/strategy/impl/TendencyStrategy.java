@@ -10,7 +10,6 @@ import org.bitcoin.market.bean.Market;
 import org.bitcoin.market.utils.DateUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,15 +21,19 @@ public abstract class TendencyStrategy extends AbsStrategy{
     public static final int TENDENCY_TYPE_MIN = 0;
     public static final int TENDENCY_TYPE_HOUR = 1;
     public static final int TENDENCY_TYPE_DATE = 2;
+    private double money;
+    private int result;
 
+
+    private double amount =0;
+    private boolean hasLog = false;
     private boolean canBuy = true;
-
-    private double cost = 0;
 
     private double lastBuyPrice;
 
-    public TendencyStrategy(TendencyStrategyParam param) {
+    public TendencyStrategy(TendencyStrategyParam param, boolean hasLog) {
         super(param);
+        this.hasLog = hasLog;
     }
 
     @Override
@@ -48,7 +51,7 @@ public abstract class TendencyStrategy extends AbsStrategy{
 
     }
 
-    public TendencyResult tendency() {
+    public TendencyStrategy tendency() {
 
         try {
             AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
@@ -67,6 +70,10 @@ public abstract class TendencyStrategy extends AbsStrategy{
                 klines = market.getKlineDate(getStrategyParam().getSymbol(),
                         tendencyStrategyParam.getTendencyTime(), tendencyStrategyParam.getLimitCount());
             }
+            String st = DateUtil.format(klines.get(0).getDatetime());
+            String et = DateUtil.format(klines.get(((TendencyStrategyParam) getStrategyParam()).getLimitCount() -1).getDatetime());
+
+            log(st +" -> " + et + ":\n");
 
             return tendcy(klines);
         }  catch (Exception e) {
@@ -75,7 +82,7 @@ public abstract class TendencyStrategy extends AbsStrategy{
         return null;
     }
 
-    private TendencyResult tendcy(List<Kline> klines) {
+    private TendencyStrategy tendcy(List<Kline> klines) {
         TendencyResult result = new TendencyResult();
         for (Kline kline : klines) {
             double cu = kline.getOpen() - kline.getClose();
@@ -86,7 +93,17 @@ public abstract class TendencyStrategy extends AbsStrategy{
             result.compute(td, kline.getOpen().doubleValue());
             guess(result, kline);
         }
-        return result;
+        log("one down = " + result.getOneDownTimes() +" up:" + result.getOneUpTimes());
+        log("two down = " + result.getTwoDownTime() +" up:" + result.getTwoUpTimes());
+        log("three down = " + result.getThreeDownTime() +" up:" + result.getThreeUpTimes());
+        log("four down = " + result.getFourDownTime() +" up:" + result.getFourUpTimes());
+        log("five down = " + result.getFiveDownTime() +" up:" + result.getFiveUpTimes());
+        log("six down = " + result.getSixDownTime() +" up:" + result.getSixUpTimes());
+        log("seven down = " + result.getSevenDownTime() +" up:" + result.getSevenUpTimes());
+        log("eight down = " + result.getEightDownTime() +" up:" + result.getTenUpTimes());
+        log("nine down = " + result.getNineDownTime() +" up:" + result.getNineUpTimes());
+
+        return this;
     }
 
     public boolean isCanBuy() {
@@ -99,19 +116,47 @@ public abstract class TendencyStrategy extends AbsStrategy{
 
     public abstract void guess(TendencyResult result, Kline kline);
 
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
     public double getLastBuyPrice() {
         return lastBuyPrice;
     }
 
     public void setLastBuyPrice(double lastBuyPrice) {
         this.lastBuyPrice = lastBuyPrice;
+    }
+
+    public boolean isHasLog() {
+        return hasLog;
+    }
+
+    public void setHasLog(boolean hasLog) {
+        this.hasLog = hasLog;
+    }
+
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public int getCost() {
+        return getStrategyParam().getCost();
     }
 }

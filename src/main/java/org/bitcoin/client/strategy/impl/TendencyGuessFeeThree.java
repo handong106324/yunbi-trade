@@ -9,8 +9,8 @@ import org.bitcoin.market.bean.Kline;
  * Created by handong on 17/1/22.
  */
 public class TendencyGuessFeeThree extends TendencyStrategy {
-    public TendencyGuessFeeThree(TendencyStrategyParam param) {
-        super(param);
+    public TendencyGuessFeeThree(TendencyStrategyParam param, boolean hasLog) {
+        super(param, hasLog);
     }
 
     @Override
@@ -18,36 +18,39 @@ public class TendencyGuessFeeThree extends TendencyStrategy {
         int res = 0;
         int currentTendency = result.getCurrentTendency();
         if (currentTendency == -3 && isCanBuy()) {
-            result.setMoney(result.getMoney() - kline.getOpen());
+            setMoney(getMoney() - kline.getClose());
 
-            if (getCost() == 0) {
-                setCost(kline.getOpen());
+            setLastBuyPrice(kline.getClose());
+            if (isHasLog()) {
+                log(DateUtil.format(kline.getDatetime()) + " feeDown three and buy "
+                        + (kline.getOpen()) +" and left:" + getMoney());
             }
-            setLastBuyPrice(kline.getOpen());
-//            log(DateUtil.format(kline.getDatetime()) + " feeDown three and buy " + (kline.getOpen()) +" and left:" + result.getMoney());
             setCanBuy(false);
             res = 1;
         }
 
 
         //盈利
-        if (upMoney(currentTendency, kline) || (
-                (currentTendency == -4 && !isCanBuy()))) {
-            result.setMoney(result.getMoney() + kline.getOpen());
-//            log(DateUtil.format(kline.getDatetime()) + " feeDown Three and sell then get:" + kline.getOpen() +" left :" + result.getMoney());
-//            log("rate = "+(result.getMoney() - 10000)/getCost() + " get=" + (result.getMoney() - 10000));
+        if (upMoney(currentTendency, kline)
+                || ((currentTendency == -4 && !isCanBuy()))) {
+            setMoney(getMoney() + kline.getClose());
+            if (isHasLog()) {
+                log(DateUtil.format(kline.getDatetime()) + " feeDown Three and sell then get:"
+                        + kline.getClose() +" left :" + getMoney());
+                log("rate = "+(getMoney() - 10000)/getCost() + " get=" + (getMoney() - 10000));
+            }
             setCanBuy(true);
             res = -1;
         }
 
-        result.setResult(res);
+        setResult(res);
 
     }
 
     private boolean upMoney(double currentTendency, Kline kline) {
 
         return currentTendency == 3 && !isCanBuy() && getLastBuyPrice() > 0
-                && (((kline.getOpen() - getLastBuyPrice())/getLastBuyPrice()) > 0.015);
+                && (((kline.getClose() - getLastBuyPrice())/getLastBuyPrice()) > getStrategyParam().getSellRate());
     }
 
 

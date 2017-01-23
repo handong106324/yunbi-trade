@@ -9,8 +9,10 @@ import org.bitcoin.market.utils.DateUtil;
  * Created by handong on 17/1/22.
  */
 public class TendencyGuessFeeTwo extends TendencyStrategy {
-    public TendencyGuessFeeTwo(TendencyStrategyParam param) {
-        super(param);
+
+    public TendencyGuessFeeTwo(TendencyStrategyParam param, boolean hasLog) {
+        super(param, hasLog);
+
     }
 
     @Override
@@ -18,13 +20,12 @@ public class TendencyGuessFeeTwo extends TendencyStrategy {
         int res = 0;
         int currentTendency = result.getCurrentTendency();
         if (currentTendency == -2 && isCanBuy()) {
-            result.setMoney(result.getMoney() - kline.getOpen());
+            setMoney(getMoney() - kline.getOpen());
 
-            if (getCost() == 0) {
-                setCost(kline.getOpen());
-            }
             setLastBuyPrice(kline.getOpen());
-            log(DateUtil.format(kline.getDatetime()) + " feeDown two and buy " + (kline.getOpen()) +" and left:" + result.getMoney());
+            if (isHasLog()) {
+                log(DateUtil.format(kline.getDatetime()) + " feeDown two and buy " + (kline.getOpen()) + " and left:" + getMoney());
+            }
             setCanBuy(false);
             res = 1;
         }
@@ -35,14 +36,17 @@ public class TendencyGuessFeeTwo extends TendencyStrategy {
                 ||
                 ((currentTendency == -3 && !isCanBuy()))
                 ) {
-            result.setMoney(result.getMoney() + kline.getOpen());
-            log(DateUtil.format(kline.getDatetime()) + " feeDown two and sell then get:" + kline.getOpen() +" left :" + result.getMoney());
-            log("rate = "+(result.getMoney() - 10000)/getCost() + " get=" + (result.getMoney() - 10000));
+            setMoney(getMoney() + kline.getOpen() * 0.999);
+            if (isHasLog()) {
+                log(DateUtil.format(kline.getDatetime()) + " feeDown two and sell then get:" + kline.getOpen() + " left :" + getMoney());
+                log("rate = " + (getMoney() - 10000) / getCost() + " get=" + (getMoney() - 10000));
+
+            }
             setCanBuy(true);
             res = -1;
         }
 
-        result.setResult(res);
+        setResult(res);
 
     }
 

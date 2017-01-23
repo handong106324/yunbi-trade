@@ -4,18 +4,7 @@ package org.bitcoin.client.strategy;
  * Created by handong on 17/1/20.
  */
 public class TendencyResult {
-
-    boolean buyStatus = true;
-    private int result;
-
-    double get;
-
     private int changeTimes;
-
-    private double money = 10000;
-
-    private int jugeOk;
-    private int jugeFail;
 
     private int currentTendency;
 
@@ -28,254 +17,205 @@ public class TendencyResult {
     private int threeDownTime;
     private int oneDownTimes;
     private int twoDownTime;
+    private int fourUpTimes;
+    private int fourDownTime;
+    private int fiveUpTimes;
+    private int fiveDownTime;
+    private int sixUpTimes;
+    private int sixDownTime;
+    private int sevenUpTimes;
+    private int sevenDownTime;
+    private int eightUpTimes;
+    private int eightDownTime;
+    private int nineUpTimes;
+    private int nineDownTime;
+    private int tenUpTimes;
+    private int tenDownTime;
+
+    public int getFiveUpTimes() {
+        return fiveUpTimes;
+    }
+
+    public void setFiveUpTimes(int fiveUpTimes) {
+        this.fiveUpTimes = fiveUpTimes;
+    }
+
+    public int getFiveDownTime() {
+        return fiveDownTime;
+    }
+
+    public void setFiveDownTime(int fiveDownTime) {
+        this.fiveDownTime = fiveDownTime;
+    }
+
+    public int getSixUpTimes() {
+        return sixUpTimes;
+    }
+
+    public void setSixUpTimes(int sixUpTimes) {
+        this.sixUpTimes = sixUpTimes;
+    }
+
+    public int getSixDownTime() {
+        return sixDownTime;
+    }
+
+    public void setSixDownTime(int sixDownTime) {
+        this.sixDownTime = sixDownTime;
+    }
+
+    public int getSevenUpTimes() {
+        return sevenUpTimes;
+    }
+
+    public void setSevenUpTimes(int sevenUpTimes) {
+        this.sevenUpTimes = sevenUpTimes;
+    }
+
+    public int getSevenDownTime() {
+        return sevenDownTime;
+    }
+
+    public void setSevenDownTime(int sevenDownTime) {
+        this.sevenDownTime = sevenDownTime;
+    }
+
+    public int getEightUpTimes() {
+        return eightUpTimes;
+    }
+
+    public void setEightUpTimes(int eightUpTimes) {
+        this.eightUpTimes = eightUpTimes;
+    }
+
+    public int getEightDownTime() {
+        return eightDownTime;
+    }
+
+    public void setEightDownTime(int eightDownTime) {
+        this.eightDownTime = eightDownTime;
+    }
+
+    public int getNineUpTimes() {
+        return nineUpTimes;
+    }
+
+    public void setNineUpTimes(int nineUpTimes) {
+        this.nineUpTimes = nineUpTimes;
+    }
+
+    public int getNineDownTime() {
+        return nineDownTime;
+    }
+
+    public void setNineDownTime(int nineDownTime) {
+        this.nineDownTime = nineDownTime;
+    }
+
+    public int getTenUpTimes() {
+        return tenUpTimes;
+    }
+
+    public void setTenUpTimes(int tenUpTimes) {
+        this.tenUpTimes = tenUpTimes;
+    }
+
+    public int getTenDownTime() {
+        return tenDownTime;
+    }
+
+    public void setTenDownTime(int tenDownTime) {
+        this.tenDownTime = tenDownTime;
+    }
+
     public void compute(int tendecny, double vwap) {
-        changeTimes ++;
-//        log(tendecny +" " + currentTendency);
-        if (tendecny ==0) {
-//            if (result == 0) {
-//                jugeOk ++;
-//            } else {
-//                jugeFail ++;
-//            }
+        changeTimes++;
+        if (tendecny == 0) {
             return;
         } else if (tendecny < 0) {//down
 
-            downTimes ++;
+            downTimes++;
             //下降
-            if (currentTendency >0) {
+            if (currentTendency > 0) {
                 if (2 == currentTendency) {
-                    twoUpTimes ++;
+                    twoUpTimes++;
                 }
 
                 if (3 <= currentTendency) {
-                    threeUpTimes ++;
+                    threeUpTimes++;
                 }
 
                 if (1 == currentTendency) {
-                    oneUpTimes ++;
+                    oneUpTimes++;
                 }
-                if (result < 0) {
-                    jugeOk ++;
-                } else {
-                    jugeFail ++;
+                if (4 == currentTendency) {
+                    fourUpTimes++;
                 }
-//                countMoney(vwap);
+                if (5 == currentTendency) {
+                    fiveUpTimes++;
+                }
+                if (6 == currentTendency) {
+                    sixUpTimes++;
+                }
+                if (7 == currentTendency) {
+                    sevenUpTimes++;
+                }
+                if (8 == currentTendency) {
+                    eightUpTimes++;
+                }
+                if (9 == currentTendency) {
+                    nineUpTimes++;
+                }
+                if (10 == currentTendency) {
+                    tenUpTimes++;
+                }
+
                 currentTendency = 0;
             }
-            currentTendency --;
+            currentTendency--;
 
         } else {
 
-            upTimes ++;
+            upTimes++;
             if (currentTendency < 0) {
                 if (-1 == currentTendency) {
-                    oneDownTimes ++;
+                    oneDownTimes++;
                 }
                 if (-2 == currentTendency) {
-                    twoDownTime ++;
+                    twoDownTime++;
                 }
                 if (-3 >= currentTendency) {
-                    threeDownTime ++;
+                    threeDownTime++;
                 }
-                if (result > 0) {
-                    jugeOk ++;
-                } else {
-                    jugeFail ++;
+
+                if (-4 == currentTendency) {
+                    fourDownTime++;
                 }
-//                countMoney(vwap);
+                if (-5 == currentTendency) {
+                    fiveDownTime++;
+                }
+                if (-6 == currentTendency) {
+                    sixDownTime++;
+                }
+                if (-7 == currentTendency) {
+                    sevenDownTime++;
+                }
+                if (-8 == currentTendency) {
+                    eightDownTime++;
+                }
+                if (-9 == currentTendency) {
+                    nineDownTime++;
+                }
+                if (-10 == currentTendency) {
+                    tenDownTime++;
+                }
                 currentTendency = 0;
 
             }
 
-            currentTendency ++;
+            currentTendency++;
         }
 
-    }
-
-    private void countMoney(double vwap) {
-
-        if (result == 1) {
-            money -= vwap;
-//            log("买入: money + " + vwap);
-            buyStatus = false;
-        } else if(result == -1) {
-            money += vwap;
-//            log("卖出: money - " + vwap);
-            buyStatus = true;
-            get = (money - 10000);
-        }
-    }
-
-    public void juge() {
-
-        if (changeTimes < 10) {
-            return;
-        }
-        if (currentTendency == 3) {//连续三次直接卖出
-            log("三连升卖出");
-            result = -1;
-            return;
-        }
-
-        if (currentTendency == -3) {//三连跌买入
-            log("三连跌买入");
-            result = 1;
-            return;
-        }
-//
-//        if (currentTendency == 2) {//两连升并且连胜次数大于5,不做任何动作
-//            boolean agaigUp = false;
-//            int rate= countRate(threeUpTimes * 100, twoUpTimes + threeUpTimes);
-//            if (rate > 60) {
-//                agaigUp = true;
-//                log("等:两连升,并且三连胜的概率:"+ rate+ " tow=" + twoUpTimes + " three=" + threeUpTimes);
-//            } else {
-//                log("卖:两连升,并且三连胜的概率:"+ rate+ " tow=" + twoUpTimes + " three=" + threeUpTimes);
-//            }
-//
-//            result = agaigUp?0:-1;
-//            return;
-//        }
-//        if (currentTendency == -2) {//两连降
-//            boolean wait = false;
-//            int rate = countRate(threeDownTime,twoDownTime + threeDownTime);
-//            if (rate >= 60) {
-//                wait = true;
-//                log("等:两连跌,并且三连跌的概率:"+ rate+ " tow=" + twoDownTime + " three=" + threeDownTime);
-//            } else {
-//                log("买:两连跌,并且三连跌的概率:"+ rate+ " tow=" + twoDownTime + " three=" + threeDownTime);
-//            }
-//
-//            result = wait?0:1;
-//            return;
-//        }
-//
-//        if (currentTendency == 1) {//升并且再次升的概率大于40,不做任何动作
-//            boolean agaigUp = false;
-//            int rate = countRate(twoUpTimes + threeUpTimes,totalUp());
-//            if (rate >= 60) {
-//                agaigUp = true;
-//                log("等:升,并且二三连胜的概率:"+ rate + " tow=" + twoUpTimes + " three=" + threeUpTimes);
-//            } else {
-//                log("卖:升,并且二三连胜的概率:"+ rate + " tow=" + twoUpTimes + " three=" + threeUpTimes);
-//            }
-//
-//            result = agaigUp?0:-1;
-//            return;
-//        }
-//
-//        if (currentTendency == -1) {
-//            boolean wait = false;
-//            int rate = countRate(twoDownTime + threeDownTime,totalDown());
-//            if (rate > 60) {
-//                wait = false;
-//                log("等:降,并且二三连降的概率:"+ rate+ " tow=" + twoDownTime + " three=" + threeDownTime);
-//            }else {
-//                log("买:降,并且二三连降的概率:"+ rate+ " tow=" + twoDownTime + " three=" + threeDownTime);
-//            }
-//            result = wait?0:1;
-//            return;
-//        }
-        result = 0;
-    }
-
-    private int countRate(int threeUpTimes, int total) {
-        if (0 == total) return 0;
-        return threeUpTimes * 100/total;
-    }
-
-    private int totalDown() {
-        int total = oneDownTimes + twoDownTime + threeDownTime;
-        return total <= 10? 1000:total;
-    }
-    private int totalUp() {
-        int total = oneUpTimes + twoUpTimes + threeUpTimes;
-        return total <= 10? 1000:total;
-
-    }
-
-    public void log(String str) {
-        System.out.println(str);
-    }
-
-
-    public int getResult() {
-//        log("预测:" + result +" 历史成功率:千分之" + jugeOk * 1000/(jugeFail + jugeOk) +
-//        " down=" + downTimes +" up = " + upTimes +" get=" + get) ;
-        return result;
-    }
-
-    public void setResult(int result) {
-        this.result = result;
-    }
-
-
-    public int guress() {
-
-        if (currentTendency == 2) {
-            return -1;
-        }
-
-        if (currentTendency == -2) {
-            return 1;
-        }
-
-        if ((currentTendency == -3)) {
-            return 1;
-        }
-
-        if (currentTendency == 3) {
-            return  -1;
-        }
-        return 0;
-    }
-
-    public boolean isBuyStatus() {
-        return buyStatus;
-    }
-
-    public void setBuyStatus(boolean buyStatus) {
-        this.buyStatus = buyStatus;
-    }
-
-    public double getGet() {
-        return get;
-    }
-
-    public void setGet(double get) {
-        this.get = get;
-    }
-
-    public int getChangeTimes() {
-        return changeTimes;
-    }
-
-    public void setChangeTimes(int changeTimes) {
-        this.changeTimes = changeTimes;
-    }
-
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public int getJugeOk() {
-        return jugeOk;
-    }
-
-    public void setJugeOk(int jugeOk) {
-        this.jugeOk = jugeOk;
-    }
-
-    public int getJugeFail() {
-        return jugeFail;
-    }
-
-    public void setJugeFail(int jugeFail) {
-        this.jugeFail = jugeFail;
     }
 
     public int getCurrentTendency() {
@@ -348,5 +288,29 @@ public class TendencyResult {
 
     public void setTwoDownTime(int twoDownTime) {
         this.twoDownTime = twoDownTime;
+    }
+
+    public int getChangeTimes() {
+        return changeTimes;
+    }
+
+    public void setChangeTimes(int changeTimes) {
+        this.changeTimes = changeTimes;
+    }
+
+    public int getFourUpTimes() {
+        return fourUpTimes;
+    }
+
+    public void setFourUpTimes(int fourUpTimes) {
+        this.fourUpTimes = fourUpTimes;
+    }
+
+    public int getFourDownTime() {
+        return fourDownTime;
+    }
+
+    public void setFourDownTime(int fourDownTime) {
+        this.fourDownTime = fourDownTime;
     }
 }

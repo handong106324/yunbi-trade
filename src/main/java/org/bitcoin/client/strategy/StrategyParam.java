@@ -10,6 +10,10 @@ public class StrategyParam {
     private Symbol symbol = Symbol.btc;
     private double buyRate;
     private double sellRate;
+    private int downTimeForBuy;
+    private int timeForSell;
+    private int upTime;
+    private int cost;
 
     public Symbol getSymbol() {
         return symbol;
@@ -35,4 +39,35 @@ public class StrategyParam {
         this.sellRate = sellRate;
     }
 
+    public int getDownTimeForBuy() {
+        return downTimeForBuy;
+    }
+
+    public void setDownTimeForBuy(int downTimeForBuy) {
+        this.downTimeForBuy = downTimeForBuy;
+    }
+
+    public int getTimeForSell() {
+        return timeForSell;
+    }
+
+    public void setTimeForSell(int timeForSell) {
+        this.timeForSell = timeForSell;
+    }
+
+    public int getUpTime() {
+        return upTime;
+    }
+
+    public void setUpTime(int upTime) {
+        this.upTime = upTime;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public int getCost() {
+        return cost;
+    }
 }
