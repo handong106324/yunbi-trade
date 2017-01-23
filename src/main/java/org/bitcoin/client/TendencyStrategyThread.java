@@ -41,13 +41,13 @@ public class TendencyStrategyThread extends Thread{
                     if (cost == 0) {
                         cost = ask;
                     }
-                    log("suy :" + ask);
+                    log("buy :" + ask);
                     strategy.writeFile("buy:" + ask);
                 } else if (res == -1) {
                     double bid = strategy.getFirstBid();
                     money += bid;
-                    log("sell :" + bid +" get=" + money + " rate=" + money/cost);
-                    strategy.writeFile("sell :" + bid +" get=" + money + " rate=" + money/cost);
+                    log("sell :" + bid +" get=" + money );
+                    strategy.writeFile("sell :" + bid +" get=" + money);
                 } else {
                     log("non");
                 }

@@ -93,15 +93,17 @@ public abstract class TendencyStrategy extends AbsStrategy{
             result.compute(td, kline.getOpen().doubleValue());
             guess(result, kline);
         }
-        log("one down = " + result.getOneDownTimes() +" up:" + result.getOneUpTimes());
-        log("two down = " + result.getTwoDownTime() +" up:" + result.getTwoUpTimes());
-        log("three down = " + result.getThreeDownTime() +" up:" + result.getThreeUpTimes());
-        log("four down = " + result.getFourDownTime() +" up:" + result.getFourUpTimes());
-        log("five down = " + result.getFiveDownTime() +" up:" + result.getFiveUpTimes());
-        log("six down = " + result.getSixDownTime() +" up:" + result.getSixUpTimes());
-        log("seven down = " + result.getSevenDownTime() +" up:" + result.getSevenUpTimes());
-        log("eight down = " + result.getEightDownTime() +" up:" + result.getTenUpTimes());
-        log("nine down = " + result.getNineDownTime() +" up:" + result.getNineUpTimes());
+        if (hasLog) {
+            log("one down = " + result.getOneDownTimes() +" up:" + result.getOneUpTimes());
+            log("two down = " + result.getTwoDownTime() +" up:" + result.getTwoUpTimes());
+            log("three down = " + result.getThreeDownTime() +" up:" + result.getThreeUpTimes());
+            log("four down = " + result.getFourDownTime() +" up:" + result.getFourUpTimes());
+            log("five down = " + result.getFiveDownTime() +" up:" + result.getFiveUpTimes());
+            log("six down = " + result.getSixDownTime() +" up:" + result.getSixUpTimes());
+            log("seven down = " + result.getSevenDownTime() +" up:" + result.getSevenUpTimes());
+            log("eight down = " + result.getEightDownTime() +" up:" + result.getTenUpTimes());
+            log("nine down = " + result.getNineDownTime() +" up:" + result.getNineUpTimes());
+        }
 
         return this;
     }

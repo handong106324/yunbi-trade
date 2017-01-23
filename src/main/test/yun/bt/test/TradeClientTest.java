@@ -16,34 +16,20 @@ import java.io.IOException;
  */
 public class TradeClientTest {
 
+
     @Test
-    public void runBtcAndTendencyHalfHour() throws IOException {
+    public void selectStrategy() throws IOException {
         TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.btc);
+        param.setSymbol(Symbol.zmc);
         int min = 5;
-        param.setLimitCount(24 * 60 /min);
+        param.setLimitCount(7 * 24 * 60 /min);
         param.setTendencyTime(min);
         param.setSellRate(0.005);
         param.setBuyRate(0.01);
-        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyStrategy strategy = new TendencyGuessFeeThree(param, true);
-//        TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategy);
-//        tradeThread.start();
-        strategy.tendency();
-    }
-    @Test
-    public void runBtcAndTendencyHalfHourForOne() throws IOException {
-        TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.btc);
-        int min = 5;
-        param.setLimitCount(1 * 24 * 60 /min);
-        param.setTendencyTime(min);
-        param.setSellRate(0.005);
-        param.setBuyRate(0.01);
-        param.setTimeForSell(-4);
-        param.setDownTimeForBuy(-4);
-        param.setUpTime(4);
-        param.setCost(10000);
+        param.setTimeForSell(-3);
+        param.setDownTimeForBuy(-1);
+        param.setUpTime(1);
+        param.setCost(100);
 
         param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
         TendencyStrategy strategy = new TendencyGuessFeeOne(param, true);
@@ -51,20 +37,5 @@ public class TradeClientTest {
 //        tradeThread.start();
         strategy.tendency();
     }
-
-    @Test
-    public void runScAndTwo() throws IOException {
-        TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.sc);
-        param.setLimitCount(100);
-        param.setTendencyTime(60);
-        param.setSellRate(0.005);
-        param.setBuyRate(0.01);
-        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyStrategy strategyTow = new TendencyGuessFeeTwo(param, true);
-
-       strategyTow.tendency();
-    }
-
 
 }
