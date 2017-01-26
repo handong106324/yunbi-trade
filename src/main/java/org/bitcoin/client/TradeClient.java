@@ -46,17 +46,17 @@ public class TradeClient {
 //        strategy.tendency();
     }
 
-    public static void runBtcAndTendency5Min() {
+    public static void runBtcAndTendency5Min() throws IOException {
         TendencyStrategyParam param = new TendencyStrategyParam();
         param.setSymbol(Symbol.btc);
-        int min = 5;
+        int min = 30;
         param.setLimitCount(1 * 24 * 60 /min);
         param.setTendencyTime(min);
         param.setSellRate(0.005);
         param.setBuyRate(0.01);
         param.setTimeForSell(-4);
-        param.setDownTimeForBuy(-4);
-        param.setUpTime(4);
+        param.setDownTimeForBuy(-3);
+        param.setUpTime(3);
         param.setCost(10000);
 
         param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);

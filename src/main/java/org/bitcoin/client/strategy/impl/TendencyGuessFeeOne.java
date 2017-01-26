@@ -7,13 +7,15 @@ import org.bitcoin.common.DoubleUtils;
 import org.bitcoin.market.bean.Kline;
 import org.bitcoin.market.utils.DateUtil;
 
+import java.io.IOException;
+
 /**
  * Created by handong on 17/1/22.
  */
 public class TendencyGuessFeeOne extends TendencyStrategy {
 
     private int during =0;
-    public TendencyGuessFeeOne(TendencyStrategyParam param, boolean hasLog) {
+    public TendencyGuessFeeOne(TendencyStrategyParam param, boolean hasLog) throws IOException {
         super(param, hasLog);
 
     }
@@ -23,8 +25,12 @@ public class TendencyGuessFeeOne extends TendencyStrategy {
         int res = 0;
         int currentTendency = result.getCurrentTendency();
         during ++;
-        if (currentTendency == getStrategyParam().getDownTimeForBuy() && isCanBuy()) {
+        if (currentTendency == getStrategyParam().getDownTimeForBuy()
+                && getLastFiveMin() > kline.getOpen()
+                && isCanBuy()) {
+
             double buyPrice = kline.getOpen();//开具买
+
             if (0 == getMoney()) {
                 setMoney(getCost());
             }

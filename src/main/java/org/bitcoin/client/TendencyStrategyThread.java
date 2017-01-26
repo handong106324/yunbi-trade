@@ -27,29 +27,31 @@ public class TendencyStrategyThread extends Thread{
         long start = System.currentTimeMillis();
         long during = time * getTimeDuring();
         long waitTime =(during - start % (time * getTimeDuring()));
+        boolean isBuy = true;
         while (true) {
 
-            log(DateUtil.format(new Date()) + " wait =" + waitTime + " (" + waitTime /getTimeDuring() +")");
             try {
                 Thread.sleep(waitTime);
-                log(DateUtil.format(new Date()) + " 等待结束 真实运行 - ");
 
                 int res = strategy.tendency().getResult();
-                if (res == 1) {
+                if (res == 1 && isBuy) {
                     double ask = strategy.getFirstAsk();
                     money -= ask;
                     if (cost == 0) {
                         cost = ask;
                     }
+                    log("");
                     log("buy :" + ask);
                     strategy.writeFile("buy:" + ask);
-                } else if (res == -1) {
+                    isBuy = false;
+                } else if (res == -1 && !isBuy) {
                     double bid = strategy.getFirstBid();
                     money += bid;
                     log("sell :" + bid +" get=" + money );
                     strategy.writeFile("sell :" + bid +" get=" + money);
+                    isBuy = true;
                 } else {
-                    log("non");
+                    System.out.print(" non ");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

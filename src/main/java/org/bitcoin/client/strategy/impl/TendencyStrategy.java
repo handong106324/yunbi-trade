@@ -24,14 +24,16 @@ public abstract class TendencyStrategy extends AbsStrategy{
     private double money;
     private int result;
 
-
+    private double canBuyLine = 0;
+    private double lastFiveMin = 0;
+    private double avageMin = 0;
     private double amount =0;
     private boolean hasLog = false;
     private boolean canBuy = true;
 
     private double lastBuyPrice;
 
-    public TendencyStrategy(TendencyStrategyParam param, boolean hasLog) {
+    public TendencyStrategy(TendencyStrategyParam param, boolean hasLog) throws IOException {
         super(param);
         this.hasLog = hasLog;
     }
@@ -73,8 +75,6 @@ public abstract class TendencyStrategy extends AbsStrategy{
             String st = DateUtil.format(klines.get(0).getDatetime());
             String et = DateUtil.format(klines.get(((TendencyStrategyParam) getStrategyParam()).getLimitCount() -1).getDatetime());
 
-            log(st +" -> " + et + ":\n");
-
             return tendcy(klines);
         }  catch (Exception e) {
             e.printStackTrace();
@@ -84,11 +84,14 @@ public abstract class TendencyStrategy extends AbsStrategy{
 
     private TendencyStrategy tendcy(List<Kline> klines) {
         TendencyResult result = new TendencyResult();
+        double totalMin = 0;
+
         for (Kline kline : klines) {
             double cu = kline.getOpen() - kline.getClose();
             if (cu == 0) {
                 continue;
             }
+            totalMin += kline.getLow();
             int td = cu > 0 ? 1:-1;
             result.compute(td, kline.getOpen().doubleValue());
             guess(result, kline);
@@ -105,7 +108,20 @@ public abstract class TendencyStrategy extends AbsStrategy{
             log("nine down = " + result.getNineDownTime() +" up:" + result.getNineUpTimes());
         }
 
+        this.avageMin = totalMin/klines.size();
+        countLastFiveKline(klines);
         return this;
+    }
+
+    private void countLastFiveKline(List<Kline> klines) {
+        double to = 0;
+        int size = klines.size();
+        to += klines.get(size - 1).getLow();
+        to += klines.get(size - 2).getLow();
+        to += klines.get(size - 3).getLow();
+        to += klines.get(size - 4).getLow();
+        to += klines.get(size - 5).getLow();
+        this.lastFiveMin = to /5;
     }
 
     public boolean isCanBuy() {
@@ -160,5 +176,29 @@ public abstract class TendencyStrategy extends AbsStrategy{
 
     public int getCost() {
         return getStrategyParam().getCost();
+    }
+
+    public double getCanBuyLine() {
+        return canBuyLine;
+    }
+
+    public void setCanBuyLine(double canBuyLine) {
+        this.canBuyLine = canBuyLine;
+    }
+
+    public double getAvageMin() {
+        return avageMin;
+    }
+
+    public void setAvageMin(double avageMin) {
+        this.avageMin = avageMin;
+    }
+
+    public double getLastFiveMin() {
+        return lastFiveMin;
+    }
+
+    public void setLastFiveMin(double lastFiveMin) {
+        this.lastFiveMin = lastFiveMin;
     }
 }

@@ -6,6 +6,7 @@ import org.bitcoin.market.bean.Market;
 import org.bitcoin.market.bean.Symbol;
 import org.bitcoin.market.bean.SymbolPair;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -20,8 +21,10 @@ public abstract class AbsStrategy {
     protected FileWriter fileWriter;
 
 
-    public AbsStrategy(StrategyParam param) {
+    public AbsStrategy(StrategyParam param) throws IOException {
         this.strategyParam = param;
+        String name = param.getSymbol().name() + param.getDownTimeForBuy() + ".text";
+        fileWriter = new FileWriter(new File(name));
     }
 
     public abstract void firstBuy() throws IOException;

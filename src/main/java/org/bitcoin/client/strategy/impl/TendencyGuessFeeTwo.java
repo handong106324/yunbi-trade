@@ -5,12 +5,14 @@ import org.bitcoin.client.strategy.TendencyStrategyParam;
 import org.bitcoin.market.bean.Kline;
 import org.bitcoin.market.utils.DateUtil;
 
+import java.io.IOException;
+
 /**
  * Created by handong on 17/1/22.
  */
 public class TendencyGuessFeeTwo extends TendencyStrategy {
 
-    public TendencyGuessFeeTwo(TendencyStrategyParam param, boolean hasLog) {
+    public TendencyGuessFeeTwo(TendencyStrategyParam param, boolean hasLog) throws IOException {
         super(param, hasLog);
 
     }
