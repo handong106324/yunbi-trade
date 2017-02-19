@@ -34,5 +34,13 @@ public enum Market {
 
     public abstract TimeZone getTimeZone();
 
+    public static Market get(String key) {
+        for (Market market : Market.values()) {
+            if (key.startsWith(market.name())) {
+                return market;
+            }
+        }
+        return null;
+    }
 }
 

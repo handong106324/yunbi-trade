@@ -36,7 +36,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
 
     @Override
     Long createNonce() {
-        return System.currentTimeMillis();
+        return System.currentTimeMillis() - 40000;
     }
 
     @Override
@@ -262,6 +262,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
 
     private String internal_send_request(AppAccount appAccount, TreeMap<String, String> params, int timeout) {
         long currentTime = System.currentTimeMillis();
+        System.out.println(currentTime);
         if (currentTime - lastUpdate < DURATION) {
             try {
                 Thread.sleep(DURATION - (currentTime - lastUpdate));

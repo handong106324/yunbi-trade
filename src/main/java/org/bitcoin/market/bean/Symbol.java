@@ -250,5 +250,14 @@ public enum Symbol {
     public abstract boolean isUsd();
 
     public abstract boolean isCny();
+
+    public static Symbol get(String code) {
+        for (Symbol symbol : Symbol.values()) {
+            if (code.startsWith(symbol.name())) {
+                return symbol;
+            }
+        }
+        return null;
+    }
 }
 

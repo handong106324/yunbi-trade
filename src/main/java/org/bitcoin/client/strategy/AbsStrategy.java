@@ -27,11 +27,6 @@ public abstract class AbsStrategy {
         fileWriter = new FileWriter(new File(name));
     }
 
-    public abstract void firstBuy() throws IOException;
-
-    public abstract void sell() throws IOException;
-
-    public abstract void buy() throws IOException;
 
     public double getBuyPrice() {
         return buyPrice;
@@ -81,21 +76,6 @@ public abstract class AbsStrategy {
         fileWriter.flush();
     }
 
-    public void trade() throws IOException {
-        firstBuy();
-        isBuy = false;
-
-        while (true) {
-            if (!isBuy) {
-                sell();
-                isBuy = true;
-            } else {
-                buy();
-                isBuy = false;
-            }
-        }
-
-    }
 
     public double getFirstAsk() {
         return getMarket().get_depth(new SymbolPair(getStrategyParam().getSymbol(),

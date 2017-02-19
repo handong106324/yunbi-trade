@@ -25,9 +25,10 @@ public class TendencyGuessFeeOne extends TendencyStrategy {
         int res = 0;
         int currentTendency = result.getCurrentTendency();
         during ++;
+        if(isHasLog()) log(currentTendency+"");
         if (currentTendency == getStrategyParam().getDownTimeForBuy()
-                && getLastFiveMin() > kline.getOpen()
-                && isCanBuy()) {
+                && isCanBuy()
+                ) {
 
             double buyPrice = kline.getOpen();//开具买
 
@@ -50,12 +51,12 @@ public class TendencyGuessFeeOne extends TendencyStrategy {
 
         //盈利
         if (upMoney(currentTendency, kline) ||
-                ((currentTendency < 0 && during > 3) && currentTendency == getStrategyParam().getTimeForSell() && !isCanBuy())) {
+                ((currentTendency < 0 && during > 3) && currentTendency == getStrategyParam().getUpTimeForSell() && !isCanBuy())) {
 //            setMoney(getMoney() + kline.getClose() * 0.999);
             double sellPrice = getAmount() * kline.getClose() * 0.999;
             setMoney(sellPrice);
             if (isHasLog()) {
-                log(DateUtil.format(kline.getDatetime()) + " sell: "+ getStrategyParam().getTimeForSell()
+                log(DateUtil.format(kline.getDatetime()) + " sell: "+ getStrategyParam().getUpTimeForSell()
                         + getAmount() + "=" + kline.getClose() * 0.999 +" total = " + getMoney());
                 log("rate = " + DoubleUtils.toFourDecimal((getMoney() - getCost()) / getCost()) + " get=" + (getMoney() - getCost()));
 
@@ -72,7 +73,7 @@ public class TendencyGuessFeeOne extends TendencyStrategy {
 
     private boolean upMoney(double currentTendency, Kline kline) {
 
-        return currentTendency == getStrategyParam().getUpTime() && !isCanBuy() && getLastBuyPrice() > 0
+        return currentTendency == getStrategyParam().getUpTimeForSell() && !isCanBuy() && getLastBuyPrice() > 0
                 && ((Math.abs(kline.getClose() - getLastBuyPrice())/getLastBuyPrice()) > getStrategyParam().getSellRate());
     }
 

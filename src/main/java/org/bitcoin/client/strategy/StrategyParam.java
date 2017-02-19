@@ -8,11 +8,15 @@ import org.bitcoin.market.bean.Symbol;
 public class StrategyParam {
 
     private Symbol symbol = Symbol.btc;
-    private double buyRate;
-    private double sellRate;
-    private int downTimeForBuy;
-    private int timeForSell;
-    private int upTime;
+
+    private double buyRate;//购买比例,超过多少比例可以买。与卖出价比,或者
+
+    private double sellRate;//卖出比例, 与买价比
+
+    private int downTimeForBuy;//连续降价次数,可以买
+
+    private int upTimeForSell;//连续升价可以卖
+
     private int cost;
 
     public Symbol getSymbol() {
@@ -47,20 +51,12 @@ public class StrategyParam {
         this.downTimeForBuy = downTimeForBuy;
     }
 
-    public int getTimeForSell() {
-        return timeForSell;
+    public int getUpTimeForSell() {
+        return upTimeForSell;
     }
 
-    public void setTimeForSell(int timeForSell) {
-        this.timeForSell = timeForSell;
-    }
-
-    public int getUpTime() {
-        return upTime;
-    }
-
-    public void setUpTime(int upTime) {
-        this.upTime = upTime;
+    public void setUpTimeForSell(int upTimeForSell) {
+        this.upTimeForSell = upTimeForSell;
     }
 
     public void setCost(int cost) {

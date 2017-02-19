@@ -38,20 +38,6 @@ public abstract class TendencyStrategy extends AbsStrategy{
         this.hasLog = hasLog;
     }
 
-    @Override
-    public void firstBuy() throws IOException {
-
-    }
-
-    @Override
-    public void sell() throws IOException {
-
-    }
-
-    @Override
-    public void buy() throws IOException {
-
-    }
 
     public TendencyStrategy tendency() {
 
@@ -87,6 +73,7 @@ public abstract class TendencyStrategy extends AbsStrategy{
         double totalMin = 0;
 
         for (Kline kline : klines) {
+
             double cu = kline.getOpen() - kline.getClose();
             if (cu == 0) {
                 continue;
@@ -94,7 +81,9 @@ public abstract class TendencyStrategy extends AbsStrategy{
             totalMin += kline.getLow();
             int td = cu > 0 ? 1:-1;
             result.compute(td, kline.getOpen().doubleValue());
-            guess(result, kline);
+            if (hasLog) {
+                guess(result, kline);
+            }
         }
         if (hasLog) {
             log("one down = " + result.getOneDownTimes() +" up:" + result.getOneUpTimes());
