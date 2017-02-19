@@ -14,8 +14,8 @@ public class YunBiApi {
     private static AppAccount getAppAccount() {
         AppAccount appAccount = new AppAccount();
         appAccount.setId(1L);
-        appAccount.setAccessKey("x6CDe7TVHrcAkCws40gqxLyFodoGmMA8DPJddLdx"); // todo 替换为access_key
-        appAccount.setSecretKey("5OWH7yxvD88NwX0bTlN0Vn6OxT9rkyQkW9daHtxu"); // todo 替换为secret_key
+        appAccount.setAccessKey("key"); // todo 替换为access_key
+        appAccount.setSecretKey("skey"); // todo 替换为secret_key
         return appAccount;
     }
 
