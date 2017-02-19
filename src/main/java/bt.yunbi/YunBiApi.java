@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 public class YunBiApi {
     public static AppAccount getAppAccount() {
 
+        return new AppAccount();
     }
 
     public BitOrder buy(Double amount, Double price, Symbol symbol, Market marketKey) throws Exception {
