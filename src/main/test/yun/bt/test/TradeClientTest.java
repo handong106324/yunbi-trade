@@ -1,10 +1,10 @@
 package yun.bt.test;
 
 import org.apache.commons.lang.StringUtils;
-import org.bitcoin.client.strategy.TendencyStrategyParam;
-import org.bitcoin.client.strategy.impl.TendencyGuessFeeOne;
-import org.bitcoin.client.strategy.impl.TendencyStrategy;
-import org.bitcoin.market.bean.Symbol;
+import bt.yunbi.client.strategy.TendencyStrategyParam;
+import bt.yunbi.client.strategy.impl.TendencyGuessFeeOne;
+import bt.yunbi.client.strategy.impl.TendencyStrategy;
+import bt.yunbi.market.bean.Symbol;
 import org.junit.Test;
 
 import java.io.IOException;

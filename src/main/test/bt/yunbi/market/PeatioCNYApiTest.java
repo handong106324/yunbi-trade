@@ -1,43 +1,54 @@
-package bt.yunbi;
+package bt.yunbi.market;
 
 import com.alibaba.fastjson.JSONObject;
 import bt.yunbi.common.FiatConverter;
-import bt.yunbi.market.AbstractMarketApi;
-import bt.yunbi.market.MarketApiFactory;
 import bt.yunbi.market.bean.*;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
-public class YunBiApi {
+public class PeatioCNYApiTest {
 
-    public static AppAccount getAppAccount() {
-        .
+    private AppAccount getAppAccount() {
+        AppAccount appAccount = new AppAccount();
+        appAccount.setId(1L);
+        appAccount.setAccessKey("key"); // todo 替换为access_key
+        appAccount.setSecretKey("sec"); // todo 替换为secret_key
+        return appAccount;
     }
 
-    public BitOrder buy(Double amount, Double price, Symbol symbol, Market marketKey) throws Exception {
+    @Test
+    public void testBuyAndCancel() throws Exception {
 
-        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(marketKey);
-        Long orderId = market.buy(getAppAccount(), amount, price, new SymbolPair(symbol, Symbol.cny));
-        BitOrder order = market.getOrder(getAppAccount(), orderId, null);
-        System.out.println(order);
-        return order;
-    }
-
-    public static BitOrder sell(Double amount, Double price, Symbol symbol, Market marketKey) throws Exception {
-
-        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(marketKey);
-        Long orderId = market.sell(getAppAccount(), amount, price, new SymbolPair(symbol, Symbol.cny));
+        Double amount = 0.01;
+        Double price = 10.0; // usd
+        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
+        Long orderId = market.buy(getAppAccount(), amount, price, new SymbolPair(Symbol.btc, Symbol.usd));
         BitOrder order = market.getOrder(getAppAccount(), orderId, null);
         assertNotNull(order);
-        System.out.println(order);
-        return order;
+        assertEquals(OrderStatus.none, order.getStatus());
+        assertEquals(amount, order.getOrderAmount());
+        assertEquals(new Double("0.0"), order.getProcessedAmount());
+        market.cancel(getAppAccount(), orderId, null);
+        order = market.getOrder(getAppAccount(), orderId, null);
+        assertNotNull(order);
+        assertEquals(OrderStatus.cancelled, order.getStatus());
     }
 
-    public static void cancel(Long orderId, Market marketKey) {
-        BitOrder order;
-        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(marketKey);
+    @Test
+    public void testSellAndCancel() throws Exception {
 
+        Double amount = 0.01;
+        Double price = 10000.0; // usd
+        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
+        Long orderId = market.sell(getAppAccount(), amount, price, new SymbolPair(Symbol.btc, Symbol.cny));
+        BitOrder order = market.getOrder(getAppAccount(), orderId, null);
+        assertNotNull(order);
+        assertEquals(OrderStatus.none, order.getStatus());
+        assertEquals(amount, order.getOrderAmount());
+        assertEquals(new Double(0.0), order.getProcessedAmount());
         market.cancel(getAppAccount(), orderId, null);
         order = market.getOrder(getAppAccount(), orderId, null);
         assertNotNull(order);

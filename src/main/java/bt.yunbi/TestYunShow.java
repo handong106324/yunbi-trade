@@ -3,9 +3,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import net.sourceforge.pinyin4j.PinyinHelper;
-import org.bitcoin.market.bean.BitOrder;
-import org.bitcoin.market.bean.Market;
-import org.bitcoin.market.bean.Symbol;
+import bt.yunbi.market.bean.BitOrder;
+import bt.yunbi.market.bean.Market;
+import bt.yunbi.market.bean.Symbol;
 import org.junit.Test;
 
 import java.text.ParseException;
