@@ -1,18 +1,17 @@
 package OKcoinHuobi.OKcoin.Stock;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.shanghai.stock.OKcoinHuobi.OKcoin.Util.OKLtcTopSellBuyData;
+import OKcoinHuobi.OKcoin.Util.OKLtcTopSellBuyData;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 public class OKcoinJason2String {
 
 	public static OKLtcTopSellBuyData Jason2Data(String jasonString){
 		OKLtcTopSellBuyData data = new OKLtcTopSellBuyData();
-		JSONObject jsonObject = new JSONObject(jasonString);
+		JSONObject jsonObject = JSONObject.parseObject(jasonString);
 		JSONArray asks = jsonObject.getJSONArray("asks");
 		JSONArray bids = jsonObject.getJSONArray("bids");
-		JSONArray ask = asks.getJSONArray(asks.length()-1);
+		JSONArray ask = asks.getJSONArray(asks.size()-1);
 		JSONArray bid = bids.getJSONArray(0);
 		data.setSellPrice(Float.valueOf(String.valueOf(ask.get(0))));
 		data.setSellAmount(Float.valueOf(String.valueOf(ask.get(1))));

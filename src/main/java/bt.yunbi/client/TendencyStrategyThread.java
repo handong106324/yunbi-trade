@@ -30,7 +30,7 @@ public class TendencyStrategyThread extends Thread{
         while (true) {
 
             try {
-                Thread.sleep(waitTime);
+//                Thread.sleep(waitTime);
 
                 int res = strategy.tendency().getResult();
                 if (res == 1 && isBuy) {

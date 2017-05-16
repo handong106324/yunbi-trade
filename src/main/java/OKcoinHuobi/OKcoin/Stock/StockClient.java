@@ -9,16 +9,12 @@ import com.alibaba.fastjson.JSONObject;
 public class StockClient {
 	
 	public static void main(String[] args) throws HttpException, IOException{
-		
-	    String api_key = "7b4de9db-0927-4fd7-806b-a1c71c480218";  //OKCoin申请的apiKey
-       	String secret_key = "9D1EFE43F30E83CDFA79670F79120DD2";  //OKCoin 申请的secret_key
- 	    String url_prex = "https://www.okcoin.cn";  //注意：请求URL 国际站https://www.okcoin.com ; 国内站https://www.okcoin.cn
-	
+
 	    /**
 	     * get请求无需发送身份认证,通常用于获取行情，市场深度等公共信息
 	     * 
 	    */
-	    IStockApi stockGet = new StockApi(url_prex);
+	    IStockApi stockGet = new StockApi();
 		
 	    /**
 	     * post请求需发送身份认证，获取用户个人相关信息时，需要指定api_key,与secret_key并与参数进行签名，
@@ -26,8 +22,7 @@ public class StockClient {
 	     * 发送post请求之前，程序会做自动加密，生成签名。
 	     * 
 	    */
-	    IStockApi stockPost = new StockApi(url_prex, api_key, secret_key);
-		
+
 	    //现货行情
 	    stockGet.ticker("btc_cny");
 	    System.out.println(stockGet.ticker("btc_cny"));

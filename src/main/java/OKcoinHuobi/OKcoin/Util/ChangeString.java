@@ -1,42 +1,35 @@
 package OKcoinHuobi.OKcoin.Util;
 
-import org.json.JSONObject;
 
-import com.shanghai.stock.OKcoinHuobi.Huobi.Stock.GetRest;
-import com.shanghai.stock.OKcoinHuobi.Huobi.Stock.HuobiService;
-import com.shanghai.stock.OKcoinHuobi.Huobi.Util.HuobiRealTimeData;
-import com.shanghai.stock.OKcoinHuobi.OKcoin.Stock.IStockApi;
-import com.shanghai.stock.OKcoinHuobi.OKcoin.Stock.StockApi;
-
-
-
+import OKcoinHuobi.Huobi.Stock.GetRest;
+import OKcoinHuobi.Huobi.Stock.HuobiService;
+import OKcoinHuobi.Huobi.Util.HuobiRealTimeData;
+import OKcoinHuobi.OKcoin.Stock.IStockApi;
+import OKcoinHuobi.OKcoin.Stock.StockApi;
+import com.alibaba.fastjson.JSONObject;
 
 public class ChangeString {
-	private static String url_prex = "https://www.okcoin.cn";
-	private static String api_key = "52612f43-9b250482-71090eca-af5e9";  //OKCoin申请的apiKey
-   	private static String secret_key = "b5c50526-dcd49dd6-5b3f5a46-1832b";  //OKCoin 申请的secret_key
-	//private String url_prex = "https://www.okcoin.cn";  //注意：请求URL 国际站https://www.okcoin.com ; 国内站https://www.okcoin.cn
-   	private static String ACCOUNT_INFO = "get_account_info";
+
    	public static String HuoJ2O(String jsonString){
-		JSONObject jsonObject = new JSONObject(jsonString);
+		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		String p_new = String.valueOf(jsonObject.get("p_new"));
 		return p_new;    	
 	} 
 	
 	public static String HuoJ2Ltc(String jsonString){
-		JSONObject jsonObject = new JSONObject(jsonString);
+		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		String p_new = String.valueOf(jsonObject.get("p_new"));
 		return p_new;
 	}
 	public static String OKCJ2O(String jsonString){
-		JSONObject jsonObject = new JSONObject(jsonString);
+		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		JSONObject ticker = jsonObject.getJSONObject("ticker");
 		Object last = ticker.get("last");
 		String last_price = last.toString();
 		return last_price;
 	}
 	public static String OKCLTCJ2O(String jsonString){
-		JSONObject jsonObject = new JSONObject(jsonString);
+		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		JSONObject ticker = jsonObject.getJSONObject("ticker");
 		Object last = ticker.get("last");
 		String last_price = last.toString();
@@ -45,7 +38,7 @@ public class ChangeString {
 	public static OKCoinRealTimeData getOKAsset(String jsonString)
 	{
 		OKCoinRealTimeData realTimeData = new OKCoinRealTimeData();
-		JSONObject jsonObject = new JSONObject(jsonString);
+		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		JSONObject info = jsonObject.getJSONObject("info");
 		JSONObject funds = info.getJSONObject("funds");
 		JSONObject asset = funds.getJSONObject("asset");
@@ -63,7 +56,7 @@ public class ChangeString {
 	}
 	public static HuobiRealTimeData getHuoAsset(String jsonString){
 		HuobiRealTimeData realTimeData = new HuobiRealTimeData();
-		JSONObject jsonObject = new JSONObject(jsonString);
+		JSONObject jsonObject = JSONObject.parseObject(jsonString);
 		realTimeData.setFree_btc(Float.valueOf(jsonObject.get("available_btc_display").toString()));
 		realTimeData.setFree_cny(Float.valueOf(jsonObject.get("available_cny_display").toString()));
 		realTimeData.setFree_ltc(Float.valueOf(jsonObject.get("available_ltc_display").toString()));
@@ -77,24 +70,23 @@ public class ChangeString {
 	
 	public static void main(String[] args) throws Exception {
 		
-		IStockApi okcoinGet = new StockApi(url_prex);
-		IStockApi okcoinPost = new StockApi(url_prex, api_key, secret_key);
-		String OkAccountInfo = okcoinPost.userinfo();
+		IStockApi okcoinGet = new StockApi();
+//		String OkAccountInfo = AccountInfoUtil.get();
 		GetRest getRest = new GetRest();
 		HuobiService service = new HuobiService();
-		String HuoAccountInfo = service.getAccountInfo(ACCOUNT_INFO);
+//		String HuoAccountInfo = service.getAccountInfo(ACCOUNT_INFO);
 		System.out.println(HuoJ2Ltc(getRest.GetLtcString()));
 		System.out.println(OKCLTCJ2O(okcoinGet.ticker("ltc_cny")));
 		System.out.println(HuoJ2O(getRest.GetString()));
 		System.out.println(OKCJ2O(okcoinGet.ticker("btc_cny")));
-		System.out.println("火币账户总资产： "+getHuoAsset(HuoAccountInfo).total);
-		System.out.println("火币账户净资产： "+getHuoAsset(HuoAccountInfo).net);
-		System.out.println("火币账户可用人民币： "+getHuoAsset(HuoAccountInfo).free_cny);
-		System.out.println("火币账户可用btc： "+getHuoAsset(HuoAccountInfo).free_btc);
-		System.out.println("OK账户总资产： "+getOKAsset(OkAccountInfo).total);
-		System.out.println("OK账户净资产： "+getOKAsset(OkAccountInfo).net);
-		System.out.println("OK账户可用人民币： "+getOKAsset(OkAccountInfo).free_cny);
-		System.out.println("OK账户可用btc： "+getOKAsset(OkAccountInfo).free_btc);
+//		System.out.println("火币账户总资产： "+getHuoAsset(HuoAccountInfo).total);
+//		System.out.println("火币账户净资产： "+getHuoAsset(HuoAccountInfo).net);
+//		System.out.println("火币账户可用人民币： "+getHuoAsset(HuoAccountInfo).free_cny);
+//		System.out.println("火币账户可用btc： "+getHuoAsset(HuoAccountInfo).free_btc);
+//		System.out.println("OK账户总资产： "+getOKAsset(OkAccountInfo).total);
+//		System.out.println("OK账户净资产： "+getOKAsset(OkAccountInfo).net);
+//		System.out.println("OK账户可用人民币： "+getOKAsset(OkAccountInfo).free_cny);
+//		System.out.println("OK账户可用btc： "+getOKAsset(OkAccountInfo).free_btc);
 
 	}
 

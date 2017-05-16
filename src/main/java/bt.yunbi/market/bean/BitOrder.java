@@ -65,7 +65,7 @@ public class BitOrder {
 
     private Boolean enable = true;
 
-    private Symbol symbol = Symbol.btc;
+    private Symbol symbol = Symbol.gnt;
 
 
     public Long getId() {

@@ -8,6 +8,7 @@ import bt.yunbi.market.MarketApiFactory;
 import bt.yunbi.market.bean.Kline;
 import bt.yunbi.market.bean.Market;
 import bt.yunbi.market.utils.DateUtil;
+import sun.jvm.hotspot.oops.Mark;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,22 +34,22 @@ public abstract class TendencyStrategy extends AbsStrategy{
 
     private double lastBuyPrice;
 
-    public TendencyStrategy(TendencyStrategyParam param, boolean hasLog) throws IOException {
+    public TendencyStrategy(TendencyStrategyParam param, boolean hasLog, Market market) throws IOException {
         super(param);
         this.hasLog = hasLog;
+        setMarketInstacne(market);
     }
 
 
     public TendencyStrategy tendency() {
 
         try {
-            AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
+            AbstractMarketApi market = getMarket();
 
             List<Kline> klines;
             TendencyStrategyParam tendencyStrategyParam = (TendencyStrategyParam) getStrategyParam();
             int tp = ((TendencyStrategyParam)getStrategyParam()).getTendencyType();
             if (tp == TENDENCY_TYPE_MIN) {
-
                 klines = market.getKlineMin(getStrategyParam().getSymbol(),
                         tendencyStrategyParam.getTendencyTime(), tendencyStrategyParam.getLimitCount());
             } else if (tp == TENDENCY_TYPE_HOUR) {

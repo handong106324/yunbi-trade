@@ -82,7 +82,7 @@ public class YunBiApi {
     public void testTicker() throws Exception {
 
         AbstractMarketApi abstractMarketApi = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        double ticker = abstractMarketApi.ticker(new SymbolPair(Symbol.btc, Symbol.cny));
+        double ticker = abstractMarketApi.ticker(new SymbolPair(Symbol.eth, Symbol.cny));
         assertTrue(ticker > 0.0);
 
     }
@@ -91,7 +91,7 @@ public class YunBiApi {
     public void testDepth() throws Exception {
 
         AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        JSONObject depth = market.get_depth(new SymbolPair(Symbol.zmc, Symbol.cny), true);
+        JSONObject depth = market.get_depth(new SymbolPair(Symbol.gnt, Symbol.cny), true);
         assertTrue(depth.containsKey("asks"));
         assertTrue(depth.containsKey("bids"));
 

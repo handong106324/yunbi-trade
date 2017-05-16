@@ -149,7 +149,7 @@ public class TestYunShow {
         return html.substring(index + st.length(), end);
     }
 
-    private String postHtml(String url) {
+    public String postHtml(String url) {
         return HttpUtil.doGet(url);
     }
 

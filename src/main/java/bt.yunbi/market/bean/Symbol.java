@@ -5,32 +5,101 @@ package bt.yunbi.market.bean;
  */
 
 public enum Symbol {
-    btc {
+//    btc {
+//        @Override
+//        public boolean isBtc() {
+//            return true;
+//        }
+//
+//        @Override
+//        public boolean isAns() {
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean isBts() {
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean isEth() {
+//            return false;
+//        }
+//        @Override
+//        public boolean isSc() {
+//            return true;
+//        }
+//
+//        public boolean isGnt() {
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean isCny() {
+//            return false;
+//        }
+//    },
+    gnt {
+        @Override
+        public boolean isBtc() {
+            return false;
+        }
+
+        @Override
+        public boolean isGnt() {
+            return true;
+        }
+        @Override
+        public boolean isAns() {
+            return false;
+        }
+
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+
+        @Override
+        public boolean isEth() {
+            return false;
+        }
+
+        @Override
+        public boolean isSc() {
+            return true;
+        }
+        @Override
+        public boolean isCny() {
+            return false;
+        }
+    },
+    sc {
         @Override
         public boolean isBtc() {
             return true;
         }
 
         @Override
-        public boolean isLtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isEtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isUsd() {
-            return false;
-        }
-        @Override
         public boolean isSc() {
             return true;
         }
 
-        public boolean isZmc() {
+        public boolean isGnt() {
+            return false;
+        }
+
+        @Override
+        public boolean isAns() {
+            return false;
+        }
+
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+
+        @Override
+        public boolean isEth() {
             return false;
         }
 
@@ -38,66 +107,33 @@ public enum Symbol {
         public boolean isCny() {
             return false;
         }
-    },zmc {
+    },
+    ans {
         @Override
         public boolean isBtc() {
             return false;
         }
 
         @Override
-        public boolean isZmc() {
-            return true;
-        }
-        @Override
-        public boolean isLtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isEtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isUsd() {
-            return false;
-        }
-
-        @Override
-        public boolean isSc() {
-            return true;
-        }
-        @Override
-        public boolean isCny() {
-            return false;
-        }
-    },sc {
-        @Override
-        public boolean isBtc() {
+        public boolean isAns() {
             return true;
         }
 
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+
+        @Override
+        public boolean isEth() {
+            return false;
+        }
         @Override
         public boolean isSc() {
             return true;
         }
 
-        public boolean isZmc() {
-            return false;
-        }
-
-        @Override
-        public boolean isLtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isEtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isUsd() {
+        public boolean isGnt() {
             return false;
         }
 
@@ -105,40 +141,8 @@ public enum Symbol {
         public boolean isCny() {
             return false;
         }
-    }, ltc {
-        @Override
-        public boolean isBtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isLtc() {
-            return true;
-        }
-
-        @Override
-        public boolean isEtc() {
-            return false;
-        }
-
-        @Override
-        public boolean isUsd() {
-            return false;
-        }
-        @Override
-        public boolean isSc() {
-            return true;
-        }
-
-        public boolean isZmc() {
-            return false;
-        }
-
-        @Override
-        public boolean isCny() {
-            return false;
-        }
-    }, usd {
+    },
+    eth {
         @Override
         public boolean isBtc() {
             return false;
@@ -148,22 +152,22 @@ public enum Symbol {
             return true;
         }
 
-        public boolean isZmc() {
+        public boolean isGnt() {
             return false;
         }
 
         @Override
-        public boolean isLtc() {
+        public boolean isAns() {
             return false;
         }
 
         @Override
-        public boolean isEtc() {
+        public boolean isBts() {
             return false;
         }
 
         @Override
-        public boolean isUsd() {
+        public boolean isEth() {
             return true;
         }
 
@@ -171,7 +175,8 @@ public enum Symbol {
         public boolean isCny() {
             return false;
         }
-    }, cny {
+    },
+    cny {
         @Override
         public boolean isBtc() {
             return false;
@@ -181,22 +186,22 @@ public enum Symbol {
             return false;
         }
 
-        public boolean isZmc() {
+        public boolean isGnt() {
             return false;
         }
 
         @Override
-        public boolean isLtc() {
+        public boolean isAns() {
             return false;
         }
 
         @Override
-        public boolean isEtc() {
+        public boolean isBts() {
             return false;
         }
 
         @Override
-        public boolean isUsd() {
+        public boolean isEth() {
             return false;
         }
 
@@ -204,7 +209,8 @@ public enum Symbol {
         public boolean isCny() {
             return true;
         }
-    }, etc {
+    },
+    bts {
         @Override
         public boolean isBtc() {
             return false;
@@ -214,22 +220,94 @@ public enum Symbol {
             return false;
         }
 
-        public boolean isZmc() {
+        public boolean isGnt() {
             return false;
         }
 
         @Override
-        public boolean isLtc() {
+        public boolean isAns() {
             return false;
         }
 
         @Override
-        public boolean isEtc() {
+        public boolean isBts() {
             return true;
         }
 
         @Override
-        public boolean isUsd() {
+        public boolean isEth() {
+            return false;
+        }
+
+        @Override
+        public boolean isCny() {
+            return false;
+        }
+    },
+    dgd {
+        @Override
+        public boolean isBtc() {
+            return false;
+        }
+        @Override
+        public boolean isSc() {
+            return false;
+        }
+
+        public boolean isGnt() {
+            return false;
+        }
+
+        @Override
+        public boolean isAns() {
+            return false;
+        }
+
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+        public boolean isDgd() {
+            return true;
+        }
+
+        @Override
+        public boolean isEth() {
+            return false;
+        }
+
+        @Override
+        public boolean isCny() {
+            return false;
+        }
+    },
+    etc {
+        @Override
+        public boolean isBtc() {
+            return false;
+        }
+        @Override
+        public boolean isSc() {
+            return false;
+        }
+
+        public boolean isGnt() {
+            return false;
+        }
+
+        @Override
+        public boolean isAns() {
+            return false;
+        }
+
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+
+        public boolean isEtc(){return true;}
+        @Override
+        public boolean isEth() {
             return false;
         }
 
@@ -242,12 +320,12 @@ public enum Symbol {
     public abstract boolean isBtc();
     public abstract boolean isSc();
 
-    public abstract boolean isZmc();
+    public abstract boolean isGnt();
 
-    public abstract boolean isLtc();
-    public abstract boolean isEtc();
+    public abstract boolean isAns();
+    public abstract boolean isBts();
 
-    public abstract boolean isUsd();
+    public abstract boolean isEth();
 
     public abstract boolean isCny();
 

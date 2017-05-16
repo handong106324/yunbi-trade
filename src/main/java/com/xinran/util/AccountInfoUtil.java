@@ -1,8 +1,16 @@
-import OKcoinHuobi.App;
+package com.xinran.util;
+import java.io.FileReader;
+
+import OKcoinHuobi.OKcoin.Stock.StockApi;
 import bt.yunbi.market.bean.AppAccount;
+import com.okcoin.rest.HttpUtilManager;
+import com.okcoin.rest.MD5Util;
+import org.apache.http.HttpException;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by 44283 on 2017/2/19.
@@ -11,11 +19,12 @@ public class AccountInfoUtil {
     private static String YUNBI_AK, YUNBI_SK;
     private static String HUOBI_AK, HUOBI_SK;
     private static String OKBI_AK, OKBI_SK;
+    public final static String OK_ACCOUNT_INFO = "get_account_info";
     static {
         FileReader fileReader = null;
         BufferedReader reader = null;
         try {
-            fileReader = new FileReader("I:\\/key.txt");
+            fileReader = new FileReader("/Users/syd/key.txt");
             reader = new BufferedReader(fileReader);
             String temp = null;
             while ((temp = reader.readLine()) != null) {
@@ -46,5 +55,36 @@ public class AccountInfoUtil {
         appAccount.setAccessKey(YUNBI_AK); // todo 替换为access_key
         appAccount.setSecretKey(YUNBI_SK); // todo 替换为secret_key
         return appAccount;
+    }
+
+    public static String getHuobiSk() {
+        return HUOBI_SK;
+    }
+
+    public static String getOkbiSk() {
+        return OKBI_SK;
+    }
+
+    public static String getOkbiAk() {
+        return OKBI_AK;
+    }
+
+    public static String getHuobiAk() {
+        return HUOBI_AK;
+    }
+
+    public static String getOkCoinUserInfo() throws HttpException, IOException {
+        // 构造参数签名
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("api_key", OKBI_AK);
+        String sign = MD5Util.buildMysignV1(params, OKBI_SK);
+        params.put("sign", sign);
+
+        // 发送post请求
+        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
+        String result = httpUtil.requestHttpPost("https://www.okcoin.cn", StockApi.USERINFO_URL,
+                params);
+
+        return result;
     }
 }

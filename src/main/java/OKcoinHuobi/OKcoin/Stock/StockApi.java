@@ -4,20 +4,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.okcoin.rest.HttpUtilManager;
+import com.okcoin.rest.MD5Util;
+import com.okcoin.rest.StringUtil;
+import com.xinran.util.AccountInfoUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpException;
 
-import com.shanghai.stock.OKcoinHuobi.OKcoin.Util.MD5Util;
-import com.shanghai.stock.OKcoinHuobi.OKcoin.Util.HttpUtilManager;
-import com.shanghai.stock.OKcoinHuobi.OKcoin.Util.StringUtil;
-
 public class StockApi implements IStockApi {
-	
-	private String secret_key;
-	
-	private String api_key;
-	
-	private String url_prex;
-	
+
+
 	/**
 	 * 现货行情URL
 	 */
@@ -36,7 +32,7 @@ public class StockApi implements IStockApi {
 	/**
 	 * 现货获取用户信息URL
 	 */
-	private final String USERINFO_URL = "/api/v1/userinfo.do?";
+	public static final String USERINFO_URL = "/api/v1/userinfo.do?";
 	
 	/**
 	 * 现货 下单交易URL
@@ -71,27 +67,24 @@ public class StockApi implements IStockApi {
 	 * 提币URL
 	 */
 	private final String WITHDRAW_URL = "/api/v1/withdraw.do";
-	
-	public StockApi(String url_prex,String api_key,String secret_key){
-		this.api_key = api_key;
-		this.secret_key = secret_key;
-		this.url_prex = url_prex;
-	}
 
-	public StockApi(String url_prex) {
-		this.url_prex = url_prex;
+	private String secret_key;
+	private String api_key;
+	public StockApi() {
+		secret_key = AccountInfoUtil.getOkbiSk();
+		api_key = AccountInfoUtil.getOkbiAk();
 	}
 
 	public String ticker(String symbol) throws HttpException, IOException {
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
 		String param = "";
-		if(!StringUtil.isEmpty(symbol )) {
+		if(!StringUtils.isEmpty(symbol )) {
 			if (!param.equals("")) {
 				param += "&";
 			}
 			param += "symbol=" + symbol;
 		}
-		String result = httpUtil.requestHttpGet(url_prex, TICKER_URL, param);
+		String result = httpUtil.requestHttpGet(getUrl_prex(), TICKER_URL, param);
 	    return result;
 	}
 
@@ -104,7 +97,7 @@ public class StockApi implements IStockApi {
 			}
 			param += "symbol=" + symbol;
 		}
-		String result = httpUtil.requestHttpGet(url_prex, this.DEPTH_URL, param);
+		String result = httpUtil.requestHttpGet(getUrl_prex(), this.DEPTH_URL, param);
 	    return result;
 	}
 
@@ -123,24 +116,11 @@ public class StockApi implements IStockApi {
 			}
 			param += "since=" + since;
 		}
-		String result = httpUtil.requestHttpGet(url_prex, this.TRADES_URL, param);
+		String result = httpUtil.requestHttpGet(getUrl_prex(), this.TRADES_URL, param);
 	    return result;
 	}
 
-	public String userinfo() throws HttpException, IOException {
-		// 构造参数签名
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("api_key", api_key);
-		String sign = MD5Util.buildMysignV1(params, this.secret_key);
-		params.put("sign", sign);
-		
-		// 发送post请求
-		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.USERINFO_URL,
-				params);
 
-		return result;
-	}
 
 	public String trade(String symbol, String type, String price, String amount) throws HttpException, IOException {
 		// 构造参数签名
@@ -163,7 +143,7 @@ public class StockApi implements IStockApi {
 		
 		// 发送post请求
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.TRADE_URL,
+		String result = httpUtil.requestHttpPost(getUrl_prex(),this.TRADE_URL,
 				params);
 
 		return result;		
@@ -187,7 +167,7 @@ public class StockApi implements IStockApi {
 		
 		// 发送post请求
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.BATCH_TRADE_URL,
+		String result = httpUtil.requestHttpPost(getUrl_prex(),this.BATCH_TRADE_URL,
 				params);
 
 		return result;		
@@ -209,7 +189,7 @@ public class StockApi implements IStockApi {
 		
 		// 发送post请求
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.CANCEL_ORDER_URL,
+		String result = httpUtil.requestHttpPost(getUrl_prex(),this.CANCEL_ORDER_URL,
 				params);
 
 		return result;
@@ -231,7 +211,7 @@ public class StockApi implements IStockApi {
 		
 		// 发送post请求
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.ORDER_INFO_URL,
+		String result = httpUtil.requestHttpPost(getUrl_prex(),this.ORDER_INFO_URL,
 				params);
 
 		return result;
@@ -256,7 +236,7 @@ public class StockApi implements IStockApi {
 		
 		// 发送post请求
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.ORDERS_INFO_URL,
+		String result = httpUtil.requestHttpPost(getUrl_prex(),this.ORDERS_INFO_URL,
 				params);
 
 		return result;
@@ -285,43 +265,21 @@ public class StockApi implements IStockApi {
 		
 		// 发送post请求
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.ORDER_HISTORY_URL,
+		String result = httpUtil.requestHttpPost(getUrl_prex(),this.ORDER_HISTORY_URL,
 				params);
 
 		return result;
 	}
 
-	public String getSecret_key() {
-		return secret_key;
-	}
-
-	public void setSecret_key(String secret_key) {
-		this.secret_key = secret_key;
-	}
-
-	
-
-	public String getApi_key() {
-		return api_key;
-	}
-
-	public void setApi_key(String api_key) {
-		this.api_key = api_key;
-	}
-
 	public String getUrl_prex() {
-		return url_prex;
-	}
-
-	public void setUrl_prex(String url_prex) {
-		this.url_prex = url_prex;
+		return "https://www.okcoin.cn";
 	}
 
 	public String withdraw(String symbol, String chargefee, String trade_pwd, String withdraw_address,
 			String withdraw_amount) throws HttpException, IOException {
 		// TODO Auto-generated method stub
 		Map<String, String> params = new HashMap<String,String>();
-		params.put("api_key", api_key);
+		params.put("api_key", AccountInfoUtil.getOkbiAk());
 		if(!StringUtil.isEmpty(symbol)){
 			params.put("symbol", symbol);
 		}
@@ -342,7 +300,7 @@ public class StockApi implements IStockApi {
 		
 		// 发送post请求
 		HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-		String result = httpUtil.requestHttpPost(url_prex,this.WITHDRAW_URL,
+		String result = httpUtil.requestHttpPost(getUrl_prex(),this.WITHDRAW_URL,
 				params);
 
 		return result;

@@ -7,7 +7,7 @@ import bt.yunbi.market.bean.Symbol;
  */
 public class StrategyParam {
 
-    private Symbol symbol = Symbol.btc;
+    private Symbol symbol = Symbol.gnt;
 
     private double buyRate;//购买比例,超过多少比例可以买。与卖出价比,或者
 

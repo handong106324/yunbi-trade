@@ -25,7 +25,7 @@ public class PeatioCNYApiTest {
         Double amount = 0.01;
         Double price = 10.0; // usd
         AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        Long orderId = market.buy(getAppAccount(), amount, price, new SymbolPair(Symbol.btc, Symbol.usd));
+        Long orderId = market.buy(getAppAccount(), amount, price, new SymbolPair(Symbol.eth, Symbol.cny));
         BitOrder order = market.getOrder(getAppAccount(), orderId, null);
         assertNotNull(order);
         assertEquals(OrderStatus.none, order.getStatus());
@@ -43,7 +43,7 @@ public class PeatioCNYApiTest {
         Double amount = 0.01;
         Double price = 10000.0; // usd
         AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        Long orderId = market.sell(getAppAccount(), amount, price, new SymbolPair(Symbol.btc, Symbol.cny));
+        Long orderId = market.sell(getAppAccount(), amount, price, new SymbolPair(Symbol.eth, Symbol.cny));
         BitOrder order = market.getOrder(getAppAccount(), orderId, null);
         assertNotNull(order);
         assertEquals(OrderStatus.none, order.getStatus());
@@ -93,7 +93,7 @@ public class PeatioCNYApiTest {
     public void testTicker() throws Exception {
 
         AbstractMarketApi abstractMarketApi = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        double ticker = abstractMarketApi.ticker(new SymbolPair(Symbol.btc, Symbol.cny));
+        double ticker = abstractMarketApi.ticker(new SymbolPair(Symbol.eth, Symbol.cny));
         assertTrue(ticker > 0.0);
 
     }
@@ -102,9 +102,9 @@ public class PeatioCNYApiTest {
     public void testDepth() throws Exception {
 
         AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        JSONObject depth = market.get_depth(new SymbolPair(Symbol.zmc, Symbol.cny), true);
-        assertTrue(depth.containsKey("asks"));
-        assertTrue(depth.containsKey("bids"));
+        JSONObject depth = market.get_depth(new SymbolPair(Symbol.gnt, Symbol.cny), true);
+        System.out.println(depth.containsKey("asks"));
+        System.out.println(depth.containsKey("bids"));
 
     }
 

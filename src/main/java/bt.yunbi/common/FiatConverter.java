@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class FiatConverter {
     private static final Logger LOG = LoggerFactory.getLogger(FiatConverter.class);
-    private final static double USD2CNY = 6.2;
+    private final static double USD2CNY = 6.8968;
 
     public static double toUsd(Double cny) {
         return toUsd(cny, new Date());

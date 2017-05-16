@@ -268,6 +268,5 @@ public abstract class AbstractMarketApi {
         }
     }
 
-
 }
 

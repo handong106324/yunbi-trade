@@ -35,14 +35,6 @@ public interface IStockApi {
 	public String trades(String symbol, String since) throws HttpException, IOException;
 
 	/**
-	 * 获取用户信息
-	 * @return
-	 * @throws IOException 
-	 * @throws HttpException 
-	*/
-	public String userinfo() throws HttpException, IOException;
-
-	/**
 	 * 下单交易
 	 * @param symbol btc_usd: 比特币 ltc_usd: 莱特币
 	 * @param type 买卖类型： 限价单（buy/sell） 市价单（buy_market/sell_market）

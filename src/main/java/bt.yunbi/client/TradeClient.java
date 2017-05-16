@@ -2,8 +2,8 @@ package bt.yunbi.client;
 
 import bt.yunbi.client.strategy.TendencyStrategyParam;
 import bt.yunbi.client.strategy.impl.TendencyGuessFeeOne;
-import bt.yunbi.client.strategy.impl.TendencyGuessFeeTwo;
 import bt.yunbi.client.strategy.impl.TendencyStrategy;
+import bt.yunbi.market.bean.Market;
 import bt.yunbi.market.bean.Symbol;
 
 import java.io.IOException;
@@ -17,11 +17,11 @@ public class TradeClient {
 //        runBtcAndTendencyHalfHour();
 //
 //        runScAndTwo();
-        testEtc();
+//        testEtc();
+//
+//        runZmcAndTendency5Min();
 
-        runZmcAndTendency5Min();
-
-        runBtcAndTendency5Min();
+//        runBtcAndTendency60Min();
     }
 
     /**
@@ -29,7 +29,7 @@ public class TradeClient {
      */
     private static void runZmcAndTendency5Min() throws IOException {
         TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.zmc);
+        param.setSymbol(Symbol.gnt);
         int min = 5;
         param.setLimitCount(7 * 24 * 60 /min);
         param.setTendencyTime(min);
@@ -40,34 +40,52 @@ public class TradeClient {
         param.setCost(100);
 
         param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyStrategy strategy = new TendencyGuessFeeOne(param, false);
+        TendencyStrategy strategy = new TendencyGuessFeeOne(param, false, Market.PeatioCNY);
         TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategy);
         tradeThread.start();
 //        strategy.tendency();
     }
-
-    public static void runBtcAndTendency5Min() throws IOException {
-        TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.btc);
-        int min = 30;
-        param.setLimitCount(1 * 24 * 60 /min);
-        param.setTendencyTime(min);
-        param.setSellRate(0.005);
-        param.setBuyRate(0.01);
-        param.setDownTimeForBuy(-3);
-        param.setUpTimeForSell(3);
-        param.setCost(10000);
-
-        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyStrategy strategy = new TendencyGuessFeeOne(param, false);
-        TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategy);
-        tradeThread.start();
-//        strategy.tendency();
-    }
+//
+//    public static void runBtcAndTendency5Min() throws IOException {
+//        TendencyStrategyParam param = new TendencyStrategyParam();
+//        param.setSymbol(Symbol.btc);
+//        int min = 30;
+//        param.setLimitCount(1 * 24 * 60 /min);
+//        param.setTendencyTime(min);
+//        param.setSellRate(0.005);
+//        param.setBuyRate(0.01);
+//        param.setDownTimeForBuy(-3);
+//        param.setUpTimeForSell(3);
+//        param.setCost(10000);
+//
+//        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
+//        TendencyStrategy strategy = new TendencyGuessFeeOne(param, false, Market.PeatioCNY);
+//        TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategy);
+//        tradeThread.start();
+////        strategy.tendency();
+//    }
+//    public static void runBtcAndTendency60Min() throws IOException {
+//        TendencyStrategyParam param = new TendencyStrategyParam();
+//        param.setSymbol(Symbol.btc);
+//        int min = 30;
+//        param.setLimitCount(5 * 24 * 60 /min);
+//        param.setTendencyTime(min);
+//        param.setSellRate(0.005);
+//        param.setBuyRate(0.01);
+//        param.setDownTimeForBuy(-4);
+//        param.setUpTimeForSell(3);
+//        param.setCost(10000);
+//
+//        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
+//        TendencyStrategy strategy = new TendencyGuessFeeOne(param, false, Market.PeatioCNY);
+//        TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategy);
+//        tradeThread.start();
+////        strategy.tendency();
+//    }
 
     public static void testEtc() throws IOException {
         TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.etc);
+        param.setSymbol(Symbol.ans);
         int min = 120;
         param.setLimitCount(5 * 24 * 60 /min);
         param.setTendencyTime(min);
@@ -78,22 +96,22 @@ public class TradeClient {
         param.setCost(10000);
 
         param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyStrategy strategy = new TendencyGuessFeeOne(param, true);
+        TendencyStrategy strategy = new TendencyGuessFeeOne(param, true, Market.PeatioCNY);
         TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategy);
         tradeThread.start();
     }
-
-    private static void runScAndTwo() throws IOException {
-        TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.sc);
-        param.setLimitCount(100);
-        param.setTendencyTime(60);
-        param.setSellRate(0.005);
-        param.setBuyRate(0.01);
-        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyStrategy strategyTow = new TendencyGuessFeeTwo(param, false);
-
-        TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategyTow);
-        tradeThread.start();
-    }
+//
+//    private static void runScAndTwo() throws IOException {
+//        TendencyStrategyParam param = new TendencyStrategyParam();
+//        param.setSymbol(Symbol.sc);
+//        param.setLimitCount(100);
+//        param.setTendencyTime(60);
+//        param.setSellRate(0.005);
+//        param.setBuyRate(0.01);
+//        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
+//        TendencyStrategy strategyTow = new TendencyGuessFeeTwo(param, false);
+//
+//        TendencyStrategyThread tradeThread = new TendencyStrategyThread(strategyTow);
+//        tradeThread.start();
+//    }
 }

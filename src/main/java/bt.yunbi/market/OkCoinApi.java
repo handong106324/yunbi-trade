@@ -1,15 +1,15 @@
 package bt.yunbi.market;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Throwables;
 import bt.yunbi.common.FiatConverter;
 import bt.yunbi.common.HttpUtils;
 import bt.yunbi.market.bean.*;
 import bt.yunbi.market.utils.MarketErrorCode;
 import bt.yunbi.market.utils.MarketUtils;
 import bt.yunbi.market.utils.TradeException;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Throwables;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -23,15 +23,15 @@ import java.text.ParseException;
 import java.util.*;
 
 
-public class PeatioCNYApi extends AbstractMarketApi {
-    private static final Logger LOG = LoggerFactory.getLogger(PeatioCNYApi.class);
+public class OkCoinApi extends AbstractMarketApi {
+    private static final Logger LOG = LoggerFactory.getLogger(OkCoinApi.class);
 
-    private static final String PEATIO_URL = "https://yunbi.com";
+    private static final String PEATIO_URL = "https://www.okcoin.cn";
     private static final long DURATION = 1000;
     private static final int TIME_OUT = 15000;
 
-    public PeatioCNYApi() {
-        super(bt.yunbi.market.bean.Currency.CNY, Market.PeatioCNY);
+    public OkCoinApi() {
+        super(bt.yunbi.market.bean.Currency.CNY, Market.OKCOIN);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
         params.put("price", price.toString());
         params.put("market", getSymbolPairDescFromUsd2Cny(symbolPair));
         params.put("canonical_verb", "POST");
-        params.put("canonical_uri", "/api/v2/orders");
+        params.put("canonical_uri", "/api/v1/trade.do ");
         JSONObject response = send_request(appAccount, params, TIME_OUT, false);
         if (response.containsKey("error")) {
             throw new TradeException(MarketErrorCode.getForPeatioCNY(response));
@@ -111,12 +111,12 @@ public class PeatioCNYApi extends AbstractMarketApi {
     }
 
     private String getSymbolPairDescFromUsd2Cny(SymbolPair symbolPair) {
-//        if (!symbolPair.getSecond().isCny()) {
+//        if (symbolPair.getSecond().isUsd()) {
 //            SymbolPair symbolPair1 = new SymbolPair(symbolPair.getFirst(), Symbol.cny);
-//            return symbolPair1.getDesc(false);
+//            return symbolPair1.getDesc(true);
 //        } else
         if (symbolPair.getSecond().isCny()) {
-            return symbolPair.getDesc(false);
+            return symbolPair.getDesc(true);
         }
         throw new RuntimeException("symbolPair not contain usd " + symbolPair.getDesc(false));
     }
@@ -194,7 +194,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
         TreeMap<String, String> params = new TreeMap<String, String>();
         params.put("canonical_verb", "GET");
         params.put("canonical_uri", "/api/v2/orders");
-        params.put("market", getSymbolPairDescFromUsd2Cny(new SymbolPair(Symbol.gnt, Symbol.cny)));
+        params.put("market", getSymbolPairDescFromUsd2Cny(new SymbolPair(Symbol.eth, Symbol.cny)));
         params.put("limit", "100");
         List<BitOrder> orders = new ArrayList<BitOrder>();
         JSONArray ordersResponse = send_requests(appAccount, params, TIME_OUT, true);
@@ -345,7 +345,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
         JSONObject data = this.get_json(symbolPair);
         if (data.containsKey("asks")) {
             JSONObject jsonObject = this.format_depth(data);
-//            if(symbolPair.getSecond() != Symbol.cny) {
+//            if(symbolPair.getSecond() == Symbol.usd) {
 //                convert_to_usd(jsonObject);
 //            }
             return jsonObject;
@@ -423,13 +423,13 @@ public class PeatioCNYApi extends AbstractMarketApi {
 
     @Override
     public List<Kline> getKlineHour(Symbol symbol, int hours, int limitCount) throws IOException, ParseException {
-        String url = getKlineUrl(symbol, 60 * hours, limitCount);
+        String url = getKlineUrl(symbol, hours +"30min", limitCount);
         return getKlines(url, symbol);
     }
 
     @Override
     public List<Kline> getKlineMin(Symbol symbol, int mins, int limitCount) throws IOException, ParseException {
-        String url = getKlineUrl(symbol, mins, limitCount);
+        String url = getKlineUrl(symbol, mins +"min", limitCount);
 
         return getKlines(url, symbol);
     }
@@ -437,7 +437,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
     @Override
     public List<Kline> getKlineDate(Symbol symbol, int days, int limitCount) throws IOException, ParseException {
 
-        String url = getKlineUrl(symbol, 1440 * days, limitCount);
+        String url = getKlineUrl(symbol, days +"day", limitCount);
         List<Kline> klines = getKlines(url, symbol);
         for (Kline kline : klines) {
             kline.setTimestamp(kline.getTimestamp());
@@ -445,9 +445,9 @@ public class PeatioCNYApi extends AbstractMarketApi {
         return klines;
     }
 
-    private String getKlineUrl(Symbol symbol, int period, int limit) {
-        return PEATIO_URL + "/api/v2/k?market=" + getSymbolPairDescFromUsd2Cny(new SymbolPair(symbol, Symbol.cny))
-                + "&period=" + period + "&limit=" + limit;
+    private String getKlineUrl(Symbol symbol, String period, int limit) {
+        return PEATIO_URL + "/api/v1/kline.do?symbol=" + getSymbolPairDescFromUsd2Cny(new SymbolPair(symbol, Symbol.cny))
+                + "&type=" + period + "&limit=" + limit;
     }
 
     public List<Kline> getKlines(String url, Symbol symbol) throws ParseException, IOException {

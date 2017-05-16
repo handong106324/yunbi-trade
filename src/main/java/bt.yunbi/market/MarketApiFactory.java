@@ -24,6 +24,9 @@ public class MarketApiFactory {
     static {
         AbstractMarketApi peatio = new PeatioCNYApi();
         marketMap.put(peatio.getMarket().name(), peatio);
+
+        OkCoinApi okCoinApi = new OkCoinApi();
+        marketMap.put(okCoinApi.getMarket().name(), okCoinApi);
     }
 
 

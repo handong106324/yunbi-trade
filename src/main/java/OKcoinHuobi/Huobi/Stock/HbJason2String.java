@@ -1,25 +1,25 @@
 package OKcoinHuobi.Huobi.Stock;
 
+import OKcoinHuobi.Huobi.Util.HbLtcTopSellBuyData;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.IOException;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.shanghai.stock.OKcoinHuobi.Huobi.Util.HbLtcTopSellBuyData;
 
 public class HbJason2String {
 	
 	public static HbLtcTopSellBuyData Jason2TopData(String jasonString){
 		HbLtcTopSellBuyData data = new HbLtcTopSellBuyData();
-		JSONObject jsonObject = new JSONObject(jasonString);
+		JSONObject jsonObject = JSONObject.parseObject(jasonString);
 		JSONArray topBuyDataList = jsonObject.getJSONArray("top_buy");
 		JSONArray topSellDataList = jsonObject.getJSONArray("top_sell");
 		JSONObject buyElement = topBuyDataList.getJSONObject(0);
 		JSONObject sellElement = topSellDataList.getJSONObject(0);
-		data.setBuyAmount((float) buyElement.getDouble("amount"));
-		data.setBuyPrice((float) buyElement.getDouble("price"));
-		data.setSellAmount((float) sellElement.getDouble("amount"));
-		data.setSellPrice((float)sellElement.getDouble("price"));
+		data.setBuyAmount( buyElement.getFloat("amount"));
+		data.setBuyPrice(buyElement.getFloat("price"));
+		data.setSellAmount(sellElement.getFloat("amount"));
+		data.setSellPrice(sellElement.getFloat("price"));
 		return data;
 	}
 	

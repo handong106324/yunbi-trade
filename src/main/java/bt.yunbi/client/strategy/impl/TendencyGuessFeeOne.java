@@ -1,5 +1,6 @@
 package bt.yunbi.client.strategy.impl;
 
+import bt.yunbi.market.bean.Market;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import bt.yunbi.client.strategy.TendencyResult;
 import bt.yunbi.client.strategy.TendencyStrategyParam;
@@ -15,8 +16,8 @@ import java.io.IOException;
 public class TendencyGuessFeeOne extends TendencyStrategy {
 
     private int during =0;
-    public TendencyGuessFeeOne(TendencyStrategyParam param, boolean hasLog) throws IOException {
-        super(param, hasLog);
+    public TendencyGuessFeeOne(TendencyStrategyParam param, boolean hasLog, Market market) throws IOException {
+        super(param, hasLog, market);
 
     }
 
@@ -25,10 +26,8 @@ public class TendencyGuessFeeOne extends TendencyStrategy {
         int res = 0;
         int currentTendency = result.getCurrentTendency();
         during ++;
-        if(isHasLog()) log(currentTendency+"");
-        if (currentTendency == getStrategyParam().getDownTimeForBuy()
-                && isCanBuy()
-                ) {
+//        if(isHasLog()) log(currentTendency+"");
+        if (currentTendency == getStrategyParam().getDownTimeForBuy() && isCanBuy()) {
 
             double buyPrice = kline.getOpen();//开具买
 

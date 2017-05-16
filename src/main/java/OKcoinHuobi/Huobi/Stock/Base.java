@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+import OKcoinHuobi.Huobi.Util.EncryptUtil;
+import OKcoinHuobi.Huobi.Util.HttpUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.shanghai.stock.OKcoinHuobi.Huobi.Util.*;
 
 public class Base {
 	

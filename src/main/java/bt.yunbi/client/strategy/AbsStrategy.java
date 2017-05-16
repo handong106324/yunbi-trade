@@ -19,6 +19,7 @@ public abstract class AbsStrategy {
     private double sellPrice;
     private boolean isBuy;
     protected FileWriter fileWriter;
+    private Market marketInstacne;
 
 
     public AbsStrategy(StrategyParam param) throws IOException {
@@ -65,11 +66,6 @@ public abstract class AbsStrategy {
         return cur;
     }
 
-    public AbstractMarketApi getMarket() {
-        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        return market;
-    }
-
 
     public void writeFile(String ticker) throws IOException {
         fileWriter.write(ticker + "\n");
@@ -86,6 +82,18 @@ public abstract class AbsStrategy {
         return getMarket().get_depth(new SymbolPair(getStrategyParam().getSymbol(),
                 Symbol.cny),true).getJSONArray("bids").
                 getJSONObject(0).getDouble("price");
+    }
+
+    public AbstractMarketApi getMarket() {
+       return MarketApiFactory.getInstance().getMarket(getMarketInstacne());
+    }
+
+    public Market getMarketInstacne() {
+        return marketInstacne;
+    }
+
+    public void setMarketInstacne(Market marketInstacne) {
+        this.marketInstacne = marketInstacne;
     }
 }
 

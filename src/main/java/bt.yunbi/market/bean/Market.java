@@ -18,7 +18,7 @@ public enum Market {
         public TimeZone getTimeZone() {
             return TimeZone.getTimeZone("GMT+8");
         }
-    },ZMCCNY {
+    },OKCOIN {
         @Override
         public boolean isUsd() {
             return false;

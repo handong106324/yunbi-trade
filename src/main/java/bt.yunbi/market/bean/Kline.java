@@ -18,7 +18,7 @@ public class Kline {
     private Double low;
     private Double close;
     private Double volume;
-    private Symbol symbol = Symbol.btc;
+//    private Symbol symbol = Symbol.btc;
     private Double vwap;
 
     public Date getDatetime() {
@@ -85,12 +85,12 @@ public class Kline {
         this.volume = volume;
     }
 
-    public void setSymbol(Symbol symbol) {
-        this.symbol = symbol;
-    }
-    public Symbol getSymbol(){
-        return this.symbol;
-    }
+//    public void setSymbol(Symbol symbol) {
+//        this.symbol = symbol;
+//    }
+//    public Symbol getSymbol(){
+//        return this.symbol;
+//    }
 
     public Double getVwap() {
         return vwap;
