@@ -8,6 +8,7 @@ public class ChainCoin {
     private String last;
     private String askSell;
     private String bidBuy;
+    private String plateForm;
 
     public String getKey() {
         return key;
@@ -49,5 +50,13 @@ public class ChainCoin {
                 ", last='" + last + '\'' +
                 ", key='" + key + '\'' +
                 '}';
+    }
+
+    public String getPlateForm() {
+        return plateForm;
+    }
+
+    public void setPlateForm(String plateForm) {
+        this.plateForm = plateForm;
     }
 }

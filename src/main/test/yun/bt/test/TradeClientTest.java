@@ -1,345 +1,179 @@
 package yun.bt.test;
 
-import biter.BiterMarketClient;
-import bittrex.BittrexMarketClient;
-import bt.yunbi.client.TendencyStrategyThread;
-import bt.yunbi.market.AbstractMarketApi;
-import bt.yunbi.market.MarketApiFactory;
-import bt.yunbi.market.bean.Market;
-import bt.yunbi.market.bean.SymbolPair;
-import btc38.Btc38Client;
-import com.alibaba.fastjson.JSON;
+import platform.biter.BiterMarketClient;
+import platform.bittrex.BittrexMarketClient;
+import platform.yunbi.HttpUtil;
+
+import platform.btc38.Btc38Client;
 import com.alibaba.fastjson.JSONObject;
-import com.okcoin.rest.HttpUtilManager;
-import model.ChainCoin;
-import org.apache.commons.lang.StringUtils;
-import bt.yunbi.client.strategy.TendencyStrategyParam;
-import bt.yunbi.client.strategy.impl.TendencyGuessFeeOne;
-import bt.yunbi.client.strategy.impl.TendencyStrategy;
-import bt.yunbi.market.bean.Symbol;
-import org.apache.http.HttpException;
 import org.junit.Test;
-import poloniex.PoloniexMarketClient;
+import test.YunBiAndBittresRunnable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Created by handong on 17/1/23.
  */
 public class TradeClientTest {
 
-    @Test
-    public void checkYunAndBittrex() {
-        BittrexMarketClient client = new BittrexMarketClient();
-        double yunEthPrice = getBuyPrice(Symbol.eth);//云币网买eth的花费
-        System.out.println("云币买价格=" + yunEthPrice);
+    public static void main(String[] args) {
 
-        List<String> pairs = client.getPairs();
-        double btcEthRate = Double.parseDouble(client.getChainCoin("BTC-ETH").getBidBuy());
+        YunBiAndBittresRunnable thread = new YunBiAndBittresRunnable();
+        ExecutorService threadPool = Executors.newCachedThreadPool();
+        CompletionService<Integer> executor = new ExecutorCompletionService<Integer>(threadPool);
 
-        double canRate = 0.07;
-        Symbol[] symbols = Symbol.values();
-        for (Symbol symbol : symbols) {
-            if (symbol.name().equals("eth")) {
-                continue;
-            }
-            double tarPrice = getBuyPrice(symbol);
-            if (0.0 == tarPrice) {
-                continue;
-            }
+        executor.submit(thread, 1);
 
-            double yunCount = yunEthPrice / tarPrice;
-
-            double bCountToEth,bCount = 0;
-            String marketName = in(symbol, pairs, true, "-");
-            if (StringUtils.isNotBlank(marketName)) {
-                bCountToEth = Double.parseDouble(client.getChainCoin(marketName).getAskSell());
-                bCount = 1 / bCountToEth;
-
-                if (bCount > yunCount && (bCount - yunCount) / yunCount > canRate) {
-                    System.out.print(" ---ETH 可以搬砖 ---" + (bCount - yunCount) / yunCount);
-                }
-
-            }
+//
+//        try {
+////            executor.submit(getTendencyStrategyThread(Symbol.sc),1);
+////            executor.submit(getTendencyStrategyThread(Symbol.ans),1);
+////            executor.submit(getTendencyStrategyThread(Symbol.bts),1);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
-            marketName = in(symbol, pairs, false, "-");
-            if (StringUtils.isNotBlank(marketName)) {
-                double btcTarRate = Double.parseDouble(client.getChainCoin(marketName).getAskSell());
-                bCount = btcEthRate / btcTarRate;
-                if (bCount > yunCount && (bCount - yunCount) / yunCount > canRate) {
-                    System.out.print(" ---BTC 可以搬砖 ---" + (bCount - yunCount) / yunCount);
-                }
-            }
-        }
     }
-    @Test
-    public void checkYunAndPonx() {
-        PoloniexMarketClient client = new PoloniexMarketClient();
-        double yunEthPrice = getBuyPrice(Symbol.eth);//云币网买eth的花费
-        System.out.println("云币买价格=" + yunEthPrice);
-
-        Map<String, ChainCoin> map = client.getAllCoinInfo();
-        List<String> pairs = client.getPairs();
-        double btcEthRate = Double.parseDouble(map.get("BTC_ETH").getBidBuy());
-
-        double canRate = 0.07;
-        Symbol[] symbols = Symbol.values();
-        for (Symbol symbol : symbols) {
-            if (symbol.name().equals("eth")) {
-                continue;
-            }
-            double tarPrice = getBuyPrice(symbol);
-            if (0.0 == tarPrice) {
-                continue;
-            }
-
-            double yunCount = yunEthPrice / tarPrice;
-
-            double bCountToEth,bCount = 0;
-            String marketName = in(symbol, pairs, true, "_");
-            if (StringUtils.isNotBlank(marketName)) {
-                bCountToEth = Double.parseDouble(map.get(marketName).getAskSell());
-                bCount = 1 / bCountToEth;
-
-                System.out.println(marketName + ":" + (bCount - yunCount) / yunCount +"[" + bCountToEth + "]");
-
-                if (bCount > yunCount && (bCount - yunCount) / yunCount > canRate) {
-                    System.out.print(" ---ETH 可以搬砖 ---" + (bCount - yunCount) / yunCount);
-                }
-
-            }
-
-
-            marketName = in(symbol, pairs, false, "_");
-            if (StringUtils.isNotBlank(marketName)) {
-                double btcTarRate = Double.parseDouble(map.get(marketName).getAskSell());
-                bCount = btcEthRate / btcTarRate;
-//                System.out.println(marketName + ":" + (bCount - yunCount) / yunCount +"[" + bCountToEth + "]");
-
-                if (bCount > yunCount && (bCount - yunCount) / yunCount > canRate) {
-                    System.out.print(" ---BTC 可以搬砖 ---" + (bCount - yunCount) / yunCount);
-                }
-            }
-        }
-    }
-
-    private String in(Symbol symbol, List<String> pairs, boolean b, String sp) {
-
-        if (b) {
-            for (String mar : pairs) {
-                if (mar.startsWith("ETH" + sp) && mar.toLowerCase().endsWith(sp + symbol.name())) {
-                    return mar;
-                }
-            }
-        } else {
-            for (String mar : pairs) {
-                if (mar.startsWith("BTC" + sp) && mar.toLowerCase().endsWith(sp + symbol.name())) {
-                    return mar;
-                }
-            }
-        }
-        return "";
-    }
-
-    public double getBuyPrice(Symbol symbol) {
-        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        JSONObject depth = market.get_depth(new SymbolPair(symbol, Symbol.cny), true);
-        if (null == depth || null == depth.getJSONArray("asks")) {
-            return 0.0;
-        }
-        String yunBuy = String.valueOf(depth.getJSONArray("asks").getJSONObject(0).getDouble("price"));
-        return Double.parseDouble(yunBuy);
-    }
-
 
     @Test
-    public void getMarketInfo() {
-        //比特儿
+    public void checkBtc38AndBittrex() {
+        Btc38Client btc38Client = new Btc38Client();
+        Set<String> set = btc38Client.getMarketInfo().keySet();
+        BittrexMarketClient bittrexMarketClient = new BittrexMarketClient();
+
+        Map<String,List<String>> conMap = new HashMap<>();
+        JSONObject market = btc38Client.getMarketInfo();
+        double USDT_BTC =  Double.parseDouble(bittrexMarketClient.getChainCoin("USDT-BTC").getLast());;
+        Set<String> bitSet = new HashSet<>();
+        List<String> pirs = bittrexMarketClient.getPairs();
+        for (String str : pirs) {
+            if (str.startsWith("BTC-") || str.startsWith("ETH-") ){
+                bitSet.add(str.substring("BTc-".length()));
+                addMap(conMap,str.substring("btc-".length()).toLowerCase(), str);
+            }
+
+        }
+
+        for (String str : set) {
+            if (bitSet.contains(str.toUpperCase())){
+                double btcPrice = market.getJSONObject(str).getJSONObject("ticker").getDouble("last");
+                List<String> list = conMap.get(str);
+                if (null != list) {
+                    System.out.print("比特时代{["+str+"="+btcPrice+"]}");
+
+                    System.out.print(" {");
+                    for (String l : list) {
+                        double bPrice = Double.parseDouble(bittrexMarketClient.getChainCoin(l).getLast());
+                        double pp = bPrice * USDT_BTC * 6.8804;
+                        System.out.print("  ["+l+"="+ pp +"]");
+
+                        System.out.print(" --- ["+ (btcPrice - pp)/btcPrice +"]");
+                    }
+                    System.out.println("}");
+                }
+
+            }
+        }
+    }
+
+    @Test
+    public void checkBiterAndBittrex() {
         BiterMarketClient biterMarketClient = new BiterMarketClient();
-        JSONObject biterData = biterMarketClient.getMarketInfo();
+        JSONObject market = biterMarketClient.getMarketInfo();
+        Set<String> set = biterMarketClient.getMarketInfo().keySet();
+        BittrexMarketClient bittrexMarketClient = new BittrexMarketClient();
 
-        //比特时代
-        JSONObject jsonObject = new Btc38Client().getMarketInfo();
+        double btcRePrice = market.getJSONObject("btc_cny").getDouble("rate");
+        Map<String,List<String>> conMap = new HashMap<>();
 
-        List<String> allHasBi = new ArrayList<>();
-        //
-        for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
-            if (biterData.keySet().contains(entry.getKey() + "_cny")) {
-                double ticker1 = Double.parseDouble((((JSONObject) entry.getValue()).getJSONObject("ticker")).getString("last"));
-                double ticker2 = Double.parseDouble(((JSONObject) biterData.get(entry.getKey() + "_cny")).getString("rate"));
-                double rate = 0.0;
-                if (ticker1 > ticker2) {
-                    rate = ticker2 / ticker1;
-                } else {
-                    rate = ticker1 / ticker2;
+        double USDT_BTC =  Double.parseDouble(bittrexMarketClient.getChainCoin("USDT-BTC").getLast());;
+        Set<String> bitSet = new HashSet<>();
+        List<String> pirs = bittrexMarketClient.getPairs();
+        for (String str : pirs) {
+            if (str.startsWith("BTC-") || str.startsWith("ETH-") ){
+                bitSet.add(str.substring("BTc-".length()).toLowerCase());
+                addMap(conMap,str.substring("btc-".length()).toLowerCase(), str);
+            }
+
+        }
+
+        for (String str : set) {
+
+            String simple = "";
+            if (str.contains("_cny") || str.contains("_btc")) {
+                simple = str.substring(0, str.length() - 4);
+            }
+            if (bitSet.contains(simple)){
+                double btcPrice = market.getJSONObject(str).getDouble("rate");
+                if (str.endsWith("_btc")) {
+                    btcPrice = btcPrice * btcRePrice;
                 }
-                System.out.println(entry.getKey() + " = " + rate + " [" + ticker1 + " " + ticker2 + " " + (rate < 0.93 ? "可搬砖" : ""));
-                if (rate < 0.93) {
-                    allHasBi.add(entry.getKey());
+                List<String> list = conMap.get(simple);
+                if (null != list) {
+//                    System.out.print("比特er{["+str+"="+btcPrice+"]}");
+//
+//                    System.out.print(" {");
+                    for (String l : list) {
+                        double bPrice = Double.parseDouble(bittrexMarketClient.getChainCoin(l).getLast());
+                        double pp = bPrice * USDT_BTC * 6.8804;
+//                        System.out.print("  ["+l+"="+ pp +"]");
+//
+                        if ((btcPrice - pp)/btcPrice < 0.01) {
+                            System.out.print("比特er{["+str+"="+btcPrice+"]}");
+                            System.out.print("  ["+l+"="+ pp +"]");
+                            System.out.print(" --- ["+ (btcPrice - pp)/btcPrice +"]");
+                            System.out.println();
+                        }
+//                        System.out.print(" --- ["+ (btcPrice - pp)/btcPrice +"]");
+                    }
+//                    System.out.println("}");
                 }
+
             }
         }
+    }
+ @Test
+    public void checkYunAndBittrex() {
+        BittrexMarketClient bittrexMarketClient = new BittrexMarketClient();
+
+     while (true) {
+
+         try {
+
+             double USDT_BTC =  Double.parseDouble(bittrexMarketClient.getChainCoin("USDT-BTC").getLast());;
+             double ETH_BTC =  Double.parseDouble(bittrexMarketClient.getChainCoin("BTC-ETH").getAskSell());;
+             double SC_BTC = Double.parseDouble(bittrexMarketClient.getChainCoin("BTC-SC").getBidBuy());
+
+//             System.out.println(SC_BTC_S + "B网SC   --:" + 6.8828 *  SC_BTC_S * USDT_BTC +" ETH=" + 6.8828 * USDT_BTC * ETH_BTC +" ETH个数=" + 100000 * SC_BTC_S/ETH_BTC);
+             System.out.println(SC_BTC + "B网SC:" + 6.8828 *  SC_BTC * USDT_BTC +" ETH=" + 6.8828 * USDT_BTC * ETH_BTC +" ETH个数=" + 100000 * SC_BTC/ETH_BTC);
+
+             Thread.sleep(5000);
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+     }
 
     }
 
-    @Test
-    public void testBanz() {
-        try {
-            String dataBtcEth = HttpUtilManager.getInstance().requestHttpGet("https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-eth",
-                    "", "");
-            String dataBtcAns = HttpUtilManager.getInstance().requestHttpGet("https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-ans",
-                    "", "");
+    public void addMap(Map<String, List<String>> map,String key, String value) {
+        List<String> list = map.get(key);
+        if (null == list) {
+            list = new ArrayList<>();
+            map.put(key, list);
+        }
 
-            JSONObject btcEth = JSON.parseObject(dataBtcEth);
-            JSONObject btcAns = JSON.parseObject(dataBtcAns);
-
-            double countAns = btcEth.getJSONArray("result").getJSONObject(0).getDouble("Last")
-                    / btcAns.getJSONArray("result").getJSONObject(0).getDouble("Last");
-
-            double countAnsBid = btcEth.getJSONArray("result").getJSONObject(0).getDouble("Bid")
-                    / btcAns.getJSONArray("result").getJSONObject(0).getDouble("Ask");
-
-            double countOldAns = (633.78 / 3.359);
-
-
-            System.out.println(countAns + " : " + countOldAns + " = " + (countAns - countOldAns) / countOldAns);
-            System.out.println(countAnsBid + " : " + countOldAns + " = " + (countAnsBid - countOldAns) / countOldAns);
-        } catch (HttpException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!list.contains(value)) {
+            list.add(value);
         }
     }
 
 
     @Test
-    public void selectStrategy() throws IOException {
-        TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.eth);
-        int min = 30;
-        param.setLimitCount(24 * 60 / min);
-        param.setTendencyTime(min);
-        param.setSellRate(0.005);
-        param.setBuyRate(0.01);
-        param.setDownTimeForBuy(-4);
-        param.setUpTimeForSell(3);
-        param.setCost(10000);
-
-        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyGuessFeeOne strategy = new TendencyGuessFeeOne(param, true, Market.PeatioCNY);
-//        strategy.tendency();
-        TendencyStrategyThread tendencyStrategyThread = new TendencyStrategyThread(strategy);
-        tendencyStrategyThread.start();
-        System.out.println("--4卖 3 买 30分钟:" + (strategy.getMoney() - strategy.getCost()));
-
-//
-//        param.setDownTimeForBuy(-3);
-//        param.setUpTimeForSell(2);
-//        strategy = new TendencyGuessFeeOne(param, true, Market.PeatioCNY);
-//        strategy.tendency();
-//        System.out.println("--2卖 3 买-- 30分钟 :" + (strategy.getMoney() - strategy.getCost()));
-//
-//
-//
-//        min = 60;
-//        param.setLimitCount(5 * 24 * 60 /min);
-//
-//        param.setDownTimeForBuy(-3);
-//        param.setUpTimeForSell(2);
-//        strategy = new TendencyGuessFeeOne(param, true, Market.PeatioCNY);
-//        strategy.tendency();
-//        System.out.println("--2卖 3 买-- 60分钟 :"+ (strategy.getMoney() - strategy.getCost()));
-//
-//
-//        param.setDownTimeForBuy(-4);
-//        param.setUpTimeForSell(3);
-//        strategy = new TendencyGuessFeeOne(param, true, Market.PeatioCNY);
-//        strategy.tendency();
-//        System.out.println("--3卖 4 买-- 60分钟:" + (strategy.getMoney() - strategy.getCost()));
-
-    }
-//
-//    @Test
-//    public void selectStrategyOk() throws IOException {
-//        TendencyStrategyParam param = new TendencyStrategyParam();
-//        param.setSymbol(Symbol.btc);
-//        int min = 30;
-//        param.setLimitCount(5 * 24 * 60 /min);
-//        param.setTendencyTime(min);
-//        param.setSellRate(0.005);
-//        param.setBuyRate(0.01);
-//        param.setDownTimeForBuy(-4);
-//        param.setUpTimeForSell(3);
-//        param.setCost(10000);
-//
-//        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-//        TendencyGuessFeeTwo strategy = new TendencyGuessFeeTwo(param, true);
-//        strategy.tendency();
-//        System.out.println("--4卖 3 买 30分钟:" + (strategy.getMoney() - strategy.getCost()));
-//
-//
-//        param.setDownTimeForBuy(-3);
-//        param.setUpTimeForSell(2);
-//        strategy = new TendencyGuessFeeOne(param, true);
-//        strategy.tendency();
-//        System.out.println("--2卖 3 买-- 30分钟 :" + (strategy.getMoney() - strategy.getCost()));
-//
-//
-//
-//        min = 60;
-//        param.setLimitCount(5 * 24 * 60 /min);
-//
-//        param.setDownTimeForBuy(-3);
-//        param.setUpTimeForSell(2);
-//        strategy = new TendencyGuessFeeOne(param, true);
-//        strategy.tendency();
-//        System.out.println("--2卖 3 买-- 30分钟 :"+ (strategy.getMoney() - strategy.getCost()));
-//
-//
-//        param.setDownTimeForBuy(-4);
-//        param.setUpTimeForSell(3);
-//        strategy = new TendencyGuessFeeOne(param, true);
-//        strategy.tendency();
-//        System.out.println("--3卖 4 买-- 30分钟:" + (strategy.getMoney() - strategy.getCost()));
-//
-//    }
-
-    @Test
-    public void runBtcAndTendency5Min() throws IOException {
-        TendencyStrategyParam param = new TendencyStrategyParam();
-        param.setSymbol(Symbol.eth);
-        int min = 30;
-        param.setLimitCount(10 * 24 * 60 / min);
-        param.setTendencyTime(min);
-        param.setSellRate(0.005);
-        param.setBuyRate(0.01);
-        param.setDownTimeForBuy(-3);
-        param.setUpTimeForSell(3);
-        param.setCost(10000);
-
-        param.setTendencyType(TendencyStrategy.TENDENCY_TYPE_MIN);
-        TendencyStrategy strategy = new TendencyGuessFeeOne(param, true, Market.PeatioCNY);
-        strategy.tendency();
-        System.out.println(strategy.getResult());
-    }
-
-    @Test
-    public void test() {
-        String[] ss = StringUtils.split("ss,", ",");
-        System.out.println(ss.length);
-        System.out.println(getFieldValue("ss,", 1));
-    }
-
-    private String getFieldValue(String valTemp, int i) {
-        String[] vals = StringUtils.split((valTemp), ",");
-        if (vals.length > i) {
-            return vals[i];
-        } else {
-            return "";
-        }
+    public void getBal(){
+        String url = "https://bittrex.com/api/v1.1/account/getbalances?apikey=d43d8ba520784fc9b8a56c193bb8dcb7&nonce=" + new Date().getTime();
+        System.out.println(HttpUtil.doGet(url));
     }
 }

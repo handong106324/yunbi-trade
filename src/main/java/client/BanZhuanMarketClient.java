@@ -7,4 +7,5 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface BanZhuanMarketClient {
     JSONObject getMarketInfo();
+    String getSp();
 }
