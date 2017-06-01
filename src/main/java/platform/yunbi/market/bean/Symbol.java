@@ -280,6 +280,114 @@ public enum Symbol {
         public boolean isCny() {
             return false;
         }
+    },qtum {
+        @Override
+        public boolean isBtc() {
+            return false;
+        }
+        @Override
+        public boolean isSc() {
+            return false;
+        }
+
+        public boolean isGnt() {
+            return false;
+        }
+
+        @Override
+        public boolean isAns() {
+            return false;
+        }
+
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+        public boolean isQtum() {
+            return true;
+        }
+
+        @Override
+        public boolean isEth() {
+            return false;
+        }
+
+        @Override
+        public boolean isCny() {
+            return false;
+        }
+    },rep {
+        @Override
+        public boolean isBtc() {
+            return false;
+        }
+        @Override
+        public boolean isSc() {
+            return false;
+        }
+
+        public boolean isGnt() {
+            return false;
+        }
+
+        @Override
+        public boolean isAns() {
+            return false;
+        }
+
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+        public boolean isRep() {
+            return true;
+        }
+
+        @Override
+        public boolean isEth() {
+            return false;
+        }
+
+        @Override
+        public boolean isCny() {
+            return false;
+        }
+    },zec {
+        @Override
+        public boolean isBtc() {
+            return false;
+        }
+        @Override
+        public boolean isSc() {
+            return false;
+        }
+
+        public boolean isGnt() {
+            return false;
+        }
+
+        @Override
+        public boolean isAns() {
+            return false;
+        }
+
+        @Override
+        public boolean isBts() {
+            return false;
+        }
+        public boolean isZec() {
+            return true;
+        }
+
+        @Override
+        public boolean isEth() {
+            return false;
+        }
+
+        @Override
+        public boolean isCny() {
+            return false;
+        }
     },
     etc {
         @Override

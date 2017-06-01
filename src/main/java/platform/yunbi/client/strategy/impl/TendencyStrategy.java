@@ -68,6 +68,11 @@ public abstract class TendencyStrategy extends AbsStrategy{
         return 0;
     }
 
+    /**
+     * 统计上升和下跌
+     * @param klines
+     * @return
+     */
     private int tendcy(List<Kline> klines) {
         tendResult = new TendencyResult();
         double totalMin = 0;

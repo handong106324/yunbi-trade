@@ -33,7 +33,6 @@ public class TendencyStrategyThread implements Runnable{
                     if (cost == 0) {
                         cost = ask;
                     }
-                    log("");
                     log("buy :" + ask);
                     strategy.writeFile("buy:" + ask);
                     isBuy = false;
@@ -47,7 +46,7 @@ public class TendencyStrategyThread implements Runnable{
 //                    System.out.print(strategy.getStrategyParam().getSymbol().name() + " non ");
                 }
 
-                Thread.sleep(30000);
+                Thread.sleep(waitTime);
 
             } catch (Exception e) {
                 e.printStackTrace();
