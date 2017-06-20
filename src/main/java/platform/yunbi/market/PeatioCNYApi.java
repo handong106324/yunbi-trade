@@ -36,7 +36,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
 
     @Override
     Long createNonce() {
-        return System.currentTimeMillis() - 40000;
+        return System.currentTimeMillis();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class PeatioCNYApi extends AbstractMarketApi {
 
 
     @Override
-    public Asset getInfo(AppAccount appAccount) {
+    public JSONArray getInfo(AppAccount appAccount) {
 
         TreeMap<String, String> params = new TreeMap<String, String>();
         JSONObject response;
@@ -161,21 +161,8 @@ public class PeatioCNYApi extends AbstractMarketApi {
         asset.setMarket(getMarket());
 
         JSONArray accounts = response.getJSONArray("accounts");
-        for (int i = 0; i < accounts.size(); i++) {
-            JSONObject balance = accounts.getJSONObject(i);
-            String currency1 = balance.getString("currency");
-            if (currency1.equals("btc")) {
-                asset.setAvailableBtc(balance.getDouble("balance"));
-                asset.setFrozenBtc(balance.getDouble("locked"));
-            }
-            if (currency1.equals("cny")) {
-                asset.setAvailableCny(balance.getDouble("balance"));
-                asset.setAvailableUsd(FiatConverter.toUsd(asset.getAvailableCny()));
-                asset.setFrozenCny(balance.getDouble("locked"));
-                asset.setFrozenUsd(FiatConverter.toUsd(asset.getFrozenCny()));
-            }
-        }
-        return asset;
+
+        return accounts;
 
     }
 

@@ -1,18 +1,24 @@
-package platform.yunbi;
+package api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import platform.yunbi.common.FiatConverter;
 import platform.yunbi.market.AbstractMarketApi;
 import platform.yunbi.market.MarketApiFactory;
 import platform.yunbi.market.bean.*;
-import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class YunBiApi {
     public static AppAccount getAppAccount() {
 
-        return new AppAccount();
+        AppAccount account = new AppAccount();
+        account.setAccessKey("geTP9APdBwIN535LERMI614xIvtFTgIZo06p5orY");
+        account.setSecretKey("JWBPTgCrYmsENodw6A8SlxP5CMx0tGebro617ruF");
+        account.setClientId("yunbi");
+        account.setEmail("442835857@qq.com");
+        return account;
     }
 
     public BitOrder buy(Double amount, Double price, Symbol symbol, Market marketKey) throws Exception {
@@ -44,67 +50,36 @@ public class YunBiApi {
         assertEquals(OrderStatus.cancelled, order.getStatus());
     }
 
-    @Test
-    public void testGetInfo() throws Exception {
+
+    public JSONArray getAccountInfo() throws Exception {
         AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        Asset asset = market.getInfo(getAppAccount());
-        assertNotNull(asset);
+        return market.getInfo(getAppAccount());
     }
 
-//    @Test
-//    public void testGetOrder() throws Exception {
-//
-//        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-//        Long orderId = 434669L;
-//        BitOrder order = market.getOrder(getAppAccount(), orderId, new SymbolPair(Symbol.btc, Symbol.usd));
-//        assertNotNull(order);
-//    }
-
-//    @Test
-//    public void testGetRunningOrder() throws Exception {
-//
-//        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-//        List<BitOrder> bitOrders = market.getRunningOrders(getAppAccount());
-//        assertTrue(bitOrders.size() > 0);
-//    }
-//
-
-
-    @Test
-    public void testGetKline5Min() throws Exception {
+    public BitOrder testBitOrder(Symbol symbol, Long orderId) throws Exception {
         AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
+        return market.getOrder(getAppAccount(), orderId, new SymbolPair(symbol, Symbol.cny));
+    }
 
+    public List<BitOrder> getRunningOrder() throws Exception {
 
+        AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
+        List<BitOrder> bitOrders = market.getRunningOrders(getAppAccount());
+        return bitOrders;
     }
 
 
-    @Test
-    public void testTicker() throws Exception {
+    public double getTicker(Symbol symbol) throws Exception {
 
         AbstractMarketApi abstractMarketApi = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
-        double ticker = abstractMarketApi.ticker(new SymbolPair(Symbol.eth, Symbol.cny));
-        assertTrue(ticker > 0.0);
-
+        double ticker = abstractMarketApi.ticker(new SymbolPair(symbol, Symbol.cny));
+        return ticker;
     }
 
-    @Test
-    public void testDepth() throws Exception {
-
+    public DepthOrder getDepth() throws Exception {
         AbstractMarketApi market = MarketApiFactory.getInstance().getMarket(Market.PeatioCNY);
         JSONObject depth = market.get_depth(new SymbolPair(Symbol.gnt, Symbol.cny), true);
-        assertTrue(depth.containsKey("asks"));
-        assertTrue(depth.containsKey("bids"));
-
+        return new DepthOrder(depth);
     }
 
-
-    private void convertToUsd(AbstractMarketApi market, Kline kline) {
-        if (!market.getMarket().isUsd()) {
-            kline.setOpen(FiatConverter.toUsd(kline.getOpen(), kline.getDatetime()));
-            kline.setHigh(FiatConverter.toUsd(kline.getHigh(), kline.getDatetime()));
-            kline.setLow(FiatConverter.toUsd(kline.getLow(), kline.getDatetime()));
-            kline.setClose(FiatConverter.toUsd(kline.getClose(), kline.getDatetime()));
-            kline.setVwap(FiatConverter.toUsd(kline.getVwap(), kline.getDatetime()));
-        }
-    }
 }

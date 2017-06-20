@@ -173,7 +173,7 @@ public abstract class AbstractMarketApi {
     public abstract JSONObject update_depth(SymbolPair symbol);
 
 
-    public abstract Asset getInfo(AppAccount appAccount);
+    public abstract JSONArray getInfo(AppAccount appAccount);
 
     public abstract List<Kline> getKlineDate(Symbol symbol, int days, int limitCount) throws IOException, ParseException;
 
@@ -268,5 +268,27 @@ public abstract class AbstractMarketApi {
         }
     }
 
+    public double getPriceByAmount(double amount,SymbolPair pair,String flag) throws Exception {
+        if (!flag.equals("bids") && !flag.equals("bids")) {
+            throw new Exception("无效的flag");
+        }
+        JSONObject dpth = get_depth(pair, true);
+
+        JSONArray bids = dpth.getJSONArray(flag);
+
+        double price = 0;
+        double count = 0;
+
+        for (Object o : bids) {
+            JSONObject jsonObject = (JSONObject)o;
+            price = jsonObject.getDouble("price");
+            count += jsonObject.getDouble("amount");
+            if (count >= amount) {
+                break;
+            }
+        }
+
+        return price;
+    }
 }
 
